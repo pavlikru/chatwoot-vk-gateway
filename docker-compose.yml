@@ -14,6 +14,7 @@ services:
       interval: 60s
       timeout: 10s
       retries: 3
+      start_period: 20s
     # Uncomment to enable the Redis-backed dedup cache (set REDIS_URL=redis://redis:6379 in .env):
     # depends_on:
     #   - redis
