@@ -60,3 +60,11 @@ Archive SHA-256 `8aa56af9ff68d556416f50cbb7fa44369ab357fa1e76c128692eddd32ae55ff
 Сборка из clean source linux/amd64 завершена; actual Node 24.22.1, lock/compiled SHA совпали с local build.
 95 local tests и все обычные gates PASS; [hosted CI](github-ci.json): build/docker success.
 Native 128 MiB/.5CPU shutdown proof и production rollout ожидают Ops; этот candidate не объявлен deployed.
+
+## Постоянная Docker regression в CI
+
+Docker job запускает `verify-shutdown.mjs` на только что собранном image с network none,
+128 MiB / swap0 / .5CPU. Проверяются held delivery + SIGTERM и timeout exit1; checker сам
+завершается exit0 только при успехе обоих сценариев. Для ускорения timeout case использует
+SHUTDOWN_TIMEOUT_MS=1000; default приложения остаётся 30000. App/source build inputs candidate
+`2a2aaa5` не меняются этой проверкой.
