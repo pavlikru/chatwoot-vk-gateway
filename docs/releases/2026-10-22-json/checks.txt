@@ -1,0 +1,86 @@
+Local source verification; no production requests or image build.
+UTC start: 2026-10-22T14:48:26.653373+00:00
+
+$ node --version
+v24.15.0
+EXIT 0
+
+$ npm --version
+11.12.1
+EXIT 0
+
+$ df -h .
+Filesystem      Size    Used   Avail Capacity iused ifree %iused  Mounted on
+/dev/disk3s5   460Gi   403Gi    26Gi    94%    9.6M  276M    3%   /System/Volumes/Data
+EXIT 0
+
+$ npm ci
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+
+added 223 packages, and audited 224 packages in 3s
+
+68 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+EXIT 0
+
+$ npm run format:check
+
+> chatwoot-vk-gateway@0.1.0 format:check
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+EXIT 0
+
+$ npm run lint
+
+> chatwoot-vk-gateway@0.1.0 lint
+> eslint .
+
+EXIT 0
+
+$ npm run typecheck
+
+> chatwoot-vk-gateway@0.1.0 typecheck
+> tsc -p tsconfig.json --noEmit
+
+EXIT 0
+
+$ npm test
+
+> chatwoot-vk-gateway@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.5 /Users/pavel/Documents/Chatwoot_VK
+
+
+ Test Files  7 passed (7)
+      Tests  81 passed (81)
+   Start at  11:48:33
+   Duration  481ms (tests 54%, transform 22%, import 22%, worker 2%)
+
+EXIT 0
+
+$ npm run build
+
+> chatwoot-vk-gateway@0.1.0 build
+> tsc -p tsconfig.build.json
+
+EXIT 0
+
+$ npm audit
+found 0 vulnerabilities
+EXIT 0
+
+$ npm audit --omit=dev
+found 0 vulnerabilities
+EXIT 0
+
+$ git diff --check
+EXIT 0
+
+Docker build/remote CI: NOT VERIFIED; awaiting current production source baseline and platform from Ops.
+UTC end: 2026-10-22T14:48:36.100778+00:00

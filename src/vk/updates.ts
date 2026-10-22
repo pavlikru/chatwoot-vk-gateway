@@ -88,7 +88,7 @@ export function buildCallbackHandler(
     if (body.type === 'confirmation') {
       return { status: 200, body: config.vkConfirmation ?? '' };
     }
-    void onUpdate(body).catch((err) => logger.error({ err }, 'callback handler failed'));
+    void onUpdate(body).catch(() => logger.error('callback handler failed'));
     return { status: 200, body: 'ok' };
   };
 }

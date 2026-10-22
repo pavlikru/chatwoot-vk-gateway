@@ -15,15 +15,17 @@ import type { ChatwootWebhookPayload } from './types.js';
  * configured, the gateway accepts unsigned payloads. See docs/TROUBLESHOOTING.md.
  */
 export function verifySignature(
-  rawBody: string,
+  rawBody: string | Buffer,
   timestamp: string | undefined,
   signatureHeader: string | undefined,
   secret: string,
 ): boolean {
   if (!timestamp || !signatureHeader?.startsWith('sha256=')) return false;
   const provided = signatureHeader.slice('sha256='.length);
-  const signedPayload = `${timestamp}.${rawBody}`;
-  const expected = createHmac('sha256', secret).update(signedPayload).digest('hex');
+  const expected = createHmac('sha256', secret)
+    .update(`${timestamp}.`)
+    .update(rawBody)
+    .digest('hex');
   const a = Buffer.from(expected, 'utf8');
   const b = Buffer.from(provided, 'utf8');
   if (a.length !== b.length) return false;

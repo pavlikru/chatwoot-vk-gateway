@@ -35,9 +35,8 @@
   (`inbox.id`, `inbox_id`, `conversation.inbox_id` или `conversation.inbox.id`). Если используется
   account-level webhook и сообщения игнорируются, настройте Callback URL прямо в API-инбоксе `VK`.
 - Если `invalid signature` (401) — задан `CHATWOOT_WEBHOOK_SECRET`, но подпись не совпала.
-  Для первого end-to-end теста оставьте `CHATWOOT_WEBHOOK_SECRET` пустым: тогда шлюз принимает
-  неподписанные доставки. После проверки доставки задайте его равным секрету API-инбокса или
-  account webhook в Chatwoot и перезапустите шлюз.
+  Сверьте его с секретом подписанного API-инбокса или account webhook в Chatwoot.
+  Не отключайте настроенный production secret ради smoke-теста.
 - В Chatwoot 4.15.1 account webhooks и API inbox webhooks подписываются, когда у webhook/channel
   есть `secret`: Chatwoot отправляет `X-Chatwoot-Timestamp` и `X-Chatwoot-Signature` со значением
   `sha256=<hex>`, где `<hex>` — HMAC-SHA256 от `{timestamp}.{raw_json_body}`. Automation/macro
@@ -68,3 +67,23 @@ docker compose logs -f            # логи в Docker
 curl http://localhost:3000/health # проверка живости
 LOG_LEVEL=debug npm run dev       # подробные логи локально
 ```
+
+## Некорректное тело webhook
+
+Оба POST endpoints принимают JSON-объект, включая неизвестные поля. Повреждённый или пустой
+JSON, `null`, массивы и scalar → `400` до бизнес-обработчиков. Неподдерживаемый Content-Type
+(включая `text/plain`) → `415`; тело больше прежних 25 MiB → `413`. Ошибка приложения остаётся
+`500`, ответ содержит общий текст HTTP-статуса. Parser exceptions и данные запроса в ответ/логи
+не передаются; фоновая ошибка регистрируется по названию операции без error message/stack.
+`HTTP request failed` содержит только status/requestId: диагностика причины требует локального
+воспроизведения на synthetic fixture. Не включайте raw body/header logging для диагностики HMAC.
+
+## Restart и незавершённые сообщения
+
+ACK `200` означает приём в фоновую обработку, а не подтверждение доставки в VK/Chatwoot.
+`SIGTERM` останавливает HTTP server и закрывает dedup store; ожидающие фоновые pipelines
+не дренируются, затем процесс завершает работу. Уже подтверждённое отправителю событие может
+быть потеряно при recreate. In-memory dedup очищается после restart, а запись дедупа ставится
+до внешней отправки: ошибка отправки может подавить retry в течение TTL. Exactly-once не
+обеспечивается; Redis сам по себе не является durable очередью. Порядок rollout и оставшиеся
+непроверенные сценарии — в [release bundle](releases/2026-10-22-json/README.md).

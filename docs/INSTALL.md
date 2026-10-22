@@ -6,7 +6,7 @@
 
 - Работающий **Chatwoot** (open-source), доступный по HTTP(S), и права администратора.
 - Сообщество (группа) **vk.com**, где вы администратор.
-- Сервер с **Node.js 20+** или **Docker** + **Docker Compose**.
+- Сервер с **Node.js 24 LTS** или **Docker** + **Docker Compose**.
 - Для режима **Callback** — публичный **HTTPS-URL**, указывающий на шлюз (домен + сертификат,
   обычно через reverse-proxy: nginx / Caddy / Traefik).
 
@@ -70,10 +70,14 @@ CHATWOOT_URL=https://chat.example.com
 CHATWOOT_ACCOUNT_ID=1
 CHATWOOT_TOKEN=...
 CHATWOOT_INBOX_ID=7
-CHATWOOT_WEBHOOK_SECRET=    # пусто для первого теста; затем secret API-инбокса/account webhook
+CHATWOOT_WEBHOOK_SECRET=    # в production — secret подписанного API-инбокса/account webhook
 ```
 
 ## 4. Запуск
+
+Для обновления существующего production gateway сначала выполните
+[release checklist](releases/2026-10-22-json/README.md). Не пересобирайте текущий dirty-image
+из fresh clone до восстановления и сверки production baseline. Команды ниже — для новой установки.
 
 ### Вариант A — Node.js (для разработки/теста)
 

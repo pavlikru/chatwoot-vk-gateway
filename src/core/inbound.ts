@@ -49,8 +49,8 @@ export async function processVkUpdate(deps: InboundDeps, update: VkUpdate): Prom
       try {
         files.push(await downloadFile(att.url, deps.config.maxAttachmentBytes, att.title));
         continue;
-      } catch (err) {
-        deps.logger.error({ err, url: att.url }, 'failed to download VK attachment');
+      } catch {
+        deps.logger.error('failed to download VK attachment');
         textParts.push(att.url);
         continue;
       }

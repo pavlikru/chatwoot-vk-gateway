@@ -1,7 +1,7 @@
 import { config as loadDotenv } from 'dotenv';
 import { z } from 'zod';
 
-loadDotenv();
+loadDotenv({ quiet: true });
 
 /** Coerce a possibly-empty string env var into an optional trimmed string. */
 const optionalString = z
