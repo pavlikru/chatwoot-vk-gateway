@@ -1,0 +1,303 @@
+{
+  "utc": "2026-10-22T15:02:33.983972+00:00",
+  "productionBaselineCommit": "77ccd0ac3c1110442cc0920e2c6db7924fb88ddf",
+  "productionBaselineRef": "codex/production-baseline-20261022",
+  "gatewayImage": {
+    "Id": "sha256:de60463542a8038305430d113696491de1fced355e7c59aab183fedb9dd8fa40",
+    "RepoTags": ["chatwoot-vk-gateway:ec2-6c8d656e3326"],
+    "RepoDigests": [
+      "chatwoot-vk-gateway@sha256:de60463542a8038305430d113696491de1fced355e7c59aab183fedb9dd8fa40"
+    ],
+    "Created": "2026-06-28T00:25:53.37583137Z",
+    "Architecture": "amd64",
+    "Os": "linux",
+    "Size": 349079385
+  },
+  "recovery": {
+    "utc": "2026-10-22T15:07:44.862624+00:00",
+    "image_inspect_id": "sha256:de60463542a8038305430d113696491de1fced355e7c59aab183fedb9dd8fa40",
+    "archive": "/var/backups/vk-gateway-ops-20261022/previous-image.tar",
+    "archive_bytes": 166187520,
+    "archive_sha256": "1328c90bcf3dcce468822f380d308311355a96862041ebbc225c482dd0eb8e61",
+    "archive_config_path": "blobs/sha256/6c8d656e332612e3ac64817c386c0071ebcf981cfead22a9908551456977b40e",
+    "config_digest": "sha256:6c8d656e332612e3ac64817c386c0071ebcf981cfead22a9908551456977b40e",
+    "config_created": "2026-06-28T00:25:53.37583137Z",
+    "config_platform": "linux/amd64",
+    "manifest_layers": 8,
+    "compose_backup": "/var/backups/vk-gateway-ops-20261022/compose.yml.previous",
+    "compose_sha256": "aefc1cfe645f6a66330b034c3b758b9fcdf591c0bb371b914a814dcce7e8fd31",
+    "mode": "0o600"
+  },
+  "runtime": {
+    "node": "v20.20.2",
+    "npm": "10.8.2",
+    "dependencies": {
+      "fastify": "5.8.5",
+      "pino": "9.14.0",
+      "vk-io": "4.10.1",
+      "dotenv": "16.6.1",
+      "zod": "3.25.76"
+    }
+  },
+  "limits": {
+    "Memory": 134217728,
+    "MemorySwap": 134217728,
+    "NanoCpus": 500000000,
+    "CpuShares": 0,
+    "PidsLimit": null,
+    "RestartPolicy": {
+      "Name": "unless-stopped",
+      "MaximumRetryCount": 0
+    },
+    "LogConfig": {
+      "Type": "local",
+      "Config": {
+        "max-file": "5",
+        "max-size": "20m"
+      }
+    },
+    "ReadonlyRootfs": false
+  },
+  "mounts": [],
+  "writablePaths": [],
+  "liveInstalledLockSha256": "0aa2c2ad32d682e9d233f9c23011b91a872f5a5120826c598069e6e2fef0ad89",
+  "historicalBuildLock": "NOT RECOVERED; installed npm metadata is not the build lockfile",
+  "originalTypeScript": "NOT RECOVERED; equivalent reconstruction from 5f9e90c + production-baseline.patch",
+  "compiledEquality": {
+    "compiler_version": "Version 5.9.3",
+    "compile_exit": 0,
+    "files": [
+      {
+        "path": "dist/chatwoot/client.js",
+        "same": true,
+        "live_sha256": "d7d90446d1d3228e449d61589616644068a68884dd086ed9bf115081bb65c999"
+      },
+      {
+        "path": "dist/chatwoot/client.js.map",
+        "same": true,
+        "live_sha256": "9d7b596dcd7caf61aa674b99285592378fd8c601780e4782ad617fcadf3bf360"
+      },
+      {
+        "path": "dist/chatwoot/types.js",
+        "same": true,
+        "live_sha256": "9513569d22d1355f169443d76833ab43ffa50775c84628cb8b5b86d29d91d050"
+      },
+      {
+        "path": "dist/chatwoot/types.js.map",
+        "same": true,
+        "live_sha256": "a39819510e1dee054b71196a74da8fb52746428baa252b2ef9c583b8826a00b8"
+      },
+      {
+        "path": "dist/chatwoot/webhook.js",
+        "same": true,
+        "live_sha256": "875d1b95c98bf8f41fd0dd922f7bd63ee5365376be232ecec8c2f560e8f44a76"
+      },
+      {
+        "path": "dist/chatwoot/webhook.js.map",
+        "same": true,
+        "live_sha256": "e35847ce9b1807e0b62f67f3e36292b705f734f874d721357c6d72742b55d956"
+      },
+      {
+        "path": "dist/config.js",
+        "same": true,
+        "live_sha256": "e41ee63cfd65c4f9b013234d5c1a5d4fdbd02cc5e9f4b0b4c642cd78dd0fd2e7"
+      },
+      {
+        "path": "dist/config.js.map",
+        "same": true,
+        "live_sha256": "2902b36a87b0262644307761e72a6f9cdd53ec56fd40d68d2594908ff8818b03"
+      },
+      {
+        "path": "dist/core/dedup.js",
+        "same": true,
+        "live_sha256": "464caeac3d4227e635f7c274ebfaec8e8f088f03b98de7afb02fbee4465cba03"
+      },
+      {
+        "path": "dist/core/dedup.js.map",
+        "same": true,
+        "live_sha256": "cce23107b2a0f81968908607fa5503df9de8454ca926198aec3057a09d727af5"
+      },
+      {
+        "path": "dist/core/inbound.js",
+        "same": true,
+        "live_sha256": "b4ceaeb642c4f43c628de619568972d7e4ab4a5860a48487e018e23921280315"
+      },
+      {
+        "path": "dist/core/inbound.js.map",
+        "same": true,
+        "live_sha256": "58b1089fd0d40bdf45116f6d04f507f9e81755de0c219c0d5ed76245e6780b1a"
+      },
+      {
+        "path": "dist/core/mapping.js",
+        "same": true,
+        "live_sha256": "ca1ee06bd0e6f5e1fee9adf49d2606d83ab5a98ce56b43650a89e1e870f69d17"
+      },
+      {
+        "path": "dist/core/mapping.js.map",
+        "same": true,
+        "live_sha256": "81d487983783809ed981b2e1d7dd6b4fb500b60eb6d5ae93c4eca70aefe84f85"
+      },
+      {
+        "path": "dist/core/outbound.js",
+        "same": true,
+        "live_sha256": "013813d91396daf22da883ae298d6b95ff5e27a82ef87e838609a401d1f86c2e"
+      },
+      {
+        "path": "dist/core/outbound.js.map",
+        "same": true,
+        "live_sha256": "70b47c39b4f4cf991b29b6cc89d6c6c69aa75f60be04f99dc29bb319520dcb54"
+      },
+      {
+        "path": "dist/index.js",
+        "same": true,
+        "live_sha256": "42258407f84f4a41326af7182bccce0e012dd5d8bd2890417c434d284c3ca157"
+      },
+      {
+        "path": "dist/index.js.map",
+        "same": true,
+        "live_sha256": "106597457512955852ad0357c3ffc0f4b4e8b278b367b970534612cf66cd6132"
+      },
+      {
+        "path": "dist/logger.js",
+        "same": true,
+        "live_sha256": "6ec6c0768cc3404cd3c904e37763786a53e9cc17a82564e690783aeda3ffc55d"
+      },
+      {
+        "path": "dist/logger.js.map",
+        "same": true,
+        "live_sha256": "25161f114f66375ab3ec2855a305f0828843071b88c9d0b2a0a59bf05894d293"
+      },
+      {
+        "path": "dist/server.js",
+        "same": true,
+        "live_sha256": "de669daec0fcb89583a0d482e8d63567907a083913ca39b6bfa2fd888e3f3d02"
+      },
+      {
+        "path": "dist/server.js.map",
+        "same": true,
+        "live_sha256": "7bbb647153dc4df0619bc7463b71c94590cd41664c3339a960c41a67f50cd7ac"
+      },
+      {
+        "path": "dist/types.js",
+        "same": true,
+        "live_sha256": "05876809e67c97518802b3e59896c5b502637a8943962262578696812251c52a"
+      },
+      {
+        "path": "dist/types.js.map",
+        "same": true,
+        "live_sha256": "20dcfc994cd97cc913d60e24c773b9b674b54a36b5a49f5f9962b5c32861411d"
+      },
+      {
+        "path": "dist/util/download.js",
+        "same": true,
+        "live_sha256": "84ed2219c30a67d7e012ca7c746dd51656f635072a2d3176dbe90f99a0daef9a"
+      },
+      {
+        "path": "dist/util/download.js.map",
+        "same": true,
+        "live_sha256": "da84189da69ea6f8f9bb8d2ade99663783cc005d11fc0b7ecb3f7ff0d07a6e5d"
+      },
+      {
+        "path": "dist/vk/attachments.in.js",
+        "same": true,
+        "live_sha256": "464d074b55e3685a777056211251e9e64790bec3f8f84c83528c524603904ceb"
+      },
+      {
+        "path": "dist/vk/attachments.in.js.map",
+        "same": true,
+        "live_sha256": "9a859c2f956aae845be07ceba0cfde11aae3e49f0c571ffe0eecfd93af43d47e"
+      },
+      {
+        "path": "dist/vk/attachments.out.js",
+        "same": true,
+        "live_sha256": "3ff8effd1e466996bf9dd1a5e7468d0486bf16baa53b73909486d3c65b84a69b"
+      },
+      {
+        "path": "dist/vk/attachments.out.js.map",
+        "same": true,
+        "live_sha256": "6e6d0f6f2017f11d70dba5669dec4da805648f3c25e7c6c1525bb4017c61bc1d"
+      },
+      {
+        "path": "dist/vk/client.js",
+        "same": true,
+        "live_sha256": "077d230bc8b584f7de15d8a9d79ccec6b2f2b953822e9f4ebb364b0ea05d9c8b"
+      },
+      {
+        "path": "dist/vk/client.js.map",
+        "same": true,
+        "live_sha256": "8f26ca02143f2d7efe283dd7b87c6b3a5a48ca707ef35ae4c246c34b86edee71"
+      },
+      {
+        "path": "dist/vk/types.js",
+        "same": true,
+        "live_sha256": "5f4da71f4af67eb22ee8ccf8f7b75cb22dcfd0d60c97217a0a4acc34fbaca640"
+      },
+      {
+        "path": "dist/vk/types.js.map",
+        "same": true,
+        "live_sha256": "c3cc0e21e28107b2c6665ddc7a664c28a256401f6ac5c567cb8d1745bd3720c5"
+      },
+      {
+        "path": "dist/vk/updates.js",
+        "same": true,
+        "live_sha256": "6dc2c53da1d8aa2fe7ca54adcbeb457281ad583aa15e2d5a56af0f691d627910"
+      },
+      {
+        "path": "dist/vk/updates.js.map",
+        "same": true,
+        "live_sha256": "59f2c06562ce2e6061b90d09c6cb3808e70a1d3283cb4148123e1235e38f8733"
+      }
+    ]
+  },
+  "baselineIsolated": {
+    "runtime": "v20.20.2",
+    "network": "none",
+    "synthetic_only": true,
+    "results": [
+      {
+        "case": "malformed-json",
+        "url": "/vk/callback",
+        "status": 500,
+        "downstream_calls": 0
+      },
+      {
+        "case": "malformed-json",
+        "url": "/chatwoot/webhook",
+        "status": 500,
+        "downstream_calls": 0
+      },
+      {
+        "case": "VK-confirmation-secret",
+        "status": 403,
+        "downstream_calls": 0
+      },
+      {
+        "case": "VK-confirmation-secret",
+        "status": 200,
+        "downstream_calls": 0
+      },
+      {
+        "case": "raw-bytes-HMAC",
+        "valid": false,
+        "status": 401,
+        "downstream_calls": 0
+      },
+      {
+        "case": "raw-bytes-HMAC",
+        "valid": true,
+        "status": 200,
+        "downstream_calls": 1
+      }
+    ]
+  },
+  "chatwoot": {
+    "version": "4.18.0",
+    "image": "sha256:b419dded7e9d2f54a24fd427b74ba7e6069d601b500618045c1eb6c01a1cc9a1",
+    "inboxId": 12,
+    "accountId": 4,
+    "channelType": "Channel::Api",
+    "signedInboxSecretMatchesGateway": true,
+    "accountWebhooksToGateway": [],
+    "syntheticTriggerFixtureSha256": "853aa49979e8c2761065a820e4e7228f14833a4b65654721c9c79179e40c2499"
+  }
+}

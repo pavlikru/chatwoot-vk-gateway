@@ -1,4 +1,5 @@
 import { createHmac } from 'node:crypto';
+import triggerFixture from './fixtures/chatwoot-4.18-trigger.json' with { type: 'json' };
 import { describe, expect, it } from 'vitest';
 import { loadConfig, type Config } from '../src/config.js';
 import { extractPeerId, shouldForwardOutbound, verifySignature } from '../src/chatwoot/webhook.js';
@@ -95,4 +96,26 @@ describe('extractPeerId', () => {
   it('returns undefined when no source id is present', () => {
     expect(extractPeerId({})).toBeUndefined();
   });
+});
+
+it('accepts a synthetic fixture signed by actual Chatwoot 4.18 Trigger code', () => {
+  expect(triggerFixture.synthetic).toBe(true);
+  const timestamp = triggerFixture.headers['X-Chatwoot-Timestamp'];
+  const signature = triggerFixture.headers['X-Chatwoot-Signature'];
+  expect(
+    verifySignature(
+      Buffer.from(triggerFixture.raw_body),
+      timestamp,
+      signature,
+      triggerFixture.secret,
+    ),
+  ).toBe(true);
+  expect(
+    verifySignature(
+      Buffer.from(triggerFixture.raw_body + ' '),
+      timestamp,
+      signature,
+      triggerFixture.secret,
+    ),
+  ).toBe(false);
 });

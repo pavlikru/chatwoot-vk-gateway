@@ -1,9 +1,8 @@
 # VK gateway JSON fix — source bundle, 22 октября 2026
 
-**Статус: NO GO для production rebuild/rollout.** Код и локальные проверки подготовлены.
-G1, G7 и Docker-часть G8 остаются NOT VERIFIED до baseline от Ops. Это не готовый image release.
-Source ref: `gateway-json-source-20261022`; commit определяется `git rev-parse gateway-json-source-20261022`.
-Все refs локальные; push/publish/deploy этой задачей не выполнялись.
+**Статус: candidate verification в работе; production rollout выполняет Ops по ТЗ 2.**
+Первый source snapshot: `099cbd2` / `gateway-json-source-20261022`. Финальный candidate source,
+image identity и ресурсные проверки записываются в `candidate.json` после сборки.
 
 ## Сохранённый baseline
 
@@ -21,26 +20,35 @@ Source ref: `gateway-json-source-20261022`; commit определяется `git
   `{"synthetic":"marker",` дал **500 на обоих POST endpoints, 0 вызовов stub**.
   Новые HTTP-регрессии до исправления: 25 failed / 20 passed; после исправления зелёные.
 
-**Production parity не доказана.** В сохранённых operational instructions
-`/Users/pavel/Documents/n8n-codex/AGENTS.md`, раздел `chatwoot-vk-gateway source of truth`,
-описаны tag `chatwoot-vk-gateway:ec2-6c8d656e3326`, config image ID
-`sha256:6c8d656e332612e3ac64817c386c0071ebcf981cfead22a9908551456977b40e`,
-сборка `5f9e90c` + неизвестный dirty `src/server.ts`, Chatwoot 4.18.0 и in-memory dedup.
-Это saved evidence, не актуальный live inventory. Config image ID не является registry digest.
-Локальный patch нельзя объявить восстановленным production patch по одному имени файла.
+## Подтверждённый production baseline, 2026-10-22 15:02 UTC
 
-### Что необходимо от Ops
+Ops предоставил immutable package/dist, runtime inventory, recovery hash и actual Chatwoot fixture.
+Доказательства без env/секретов: [ops-baseline.json](ops-baseline.json).
+Реконструированный production baseline сохранён отдельно: `77ccd0ac3c1110442cc0920e2c6db7924fb88ddf`
+(`codex/production-baseline-20261022`), `5f9e90c` + [production-baseline.patch](production-baseline.patch).
+Patch добавляет только boolean диагностику наличия timestamp/signature. Проверены все 36 `.js`/maps:
+побайтовое совпадение с immutable production; compiler TypeScript 5.9.3. Исходный TS не извлечён:
+это доказанная compiled-equivalent реконструкция. Source tree и build lock исторической сборки
+восстановить побайтово нельзя; hidden installed npm lock не выдаётся за исходный package-lock.
 
-Actual image ID/RepoDigest (либо hash сохранённого recovery archive), platform, Node/npm/app/
-Chatwoot versions, SHA lock и compiled entrypoints, безопасный source diff, resource limits и
-подтверждение сохранённого recovery image. Production env/переписка/подписи не нужны.
+Actual platform `linux/amd64`, Node 20.20.2/npm 10.8.2; 128 MiB, swap 0, CPU 0.5; writable paths
+и mounts пусты. Docker29 image inspect ID/RepoDigest `de604635…dd8fa40` отличается от config digest
+`6c8d656e…6977b40e` — оба сохранены в evidence. Recovery archive на сервере Ops:
+`/var/backups/vk-gateway-ops-20261022/previous-image.tar`, SHA-256
+`1328c90bcf3dcce468822f380d308311355a96862041ebbc225c482dd0eb8e61`; Compose backup также сохранён.
+Matching old image изолированно (`--network none`, synthetic config/stubs): malformed JSON на обоих
+POST →500, downstream calls 0; VK secret/confirmation и raw HMAC acceptance/rejection подтверждены.
 
-Если TS нет: Ops извлекает только immutable `package*.json` и `dist/*.js` из image. Сначала
-сравниваются lock и все модули, не только `/health` или server.js. Эквивалентный TS patch
-восстанавливается по compiled diff, закрепляется synthetic tests и сохраняется отдельной
-baseline-точкой перед переносом JSON fix. Совпадение compiled JS при одинаковом compiler/lock
-подтверждает сравниваемые модули; при семантическом восстановлении явно остаётся неизвестным
-оригинальный TS/source parity. Writable layer, env и volumes не копируются.
+### Дополнительные изменения source release относительно production
+
+Сохранённый ранее локальный baseline `1cd0bd7` содержит **не-live** изменения: strict timestamp/prefix
+HMAC, fail-closed inbox filtering, optional Redis/config и close. Их нельзя называть production patch.
+Они сохраняются в source release: actual Chatwoot 4.18.0 подписывает timestamp+raw body в нужном
+формате и передаёт inbox.id; synthetic actual-Trigger fixture проверяет совместимость. В production
+REDIS_URL отсутствует, поэтому candidate использует прежний in-memory backend; Redis не включается
+и operational services/env не меняются. Тесты проверяют default backend и существующий optional path.
+Остальные изменения: JSON/shape rejection, безопасные error logs, Node/dependency updates и ранее
+внесённый wget healthcheck. Rollout/реальные сообщения принадлежат Ops.
 
 ## Исправление и контракт
 
@@ -68,7 +76,10 @@ Timestamp входит в подпись; окно свежести не доб�
 [Trigger](https://github.com/chatwoot/chatwoot/blob/v4.18.0/lib/webhooks/trigger.rb) и
 [Listener](https://github.com/chatwoot/chatwoot/blob/v4.18.0/app/listeners/webhook_listener.rb):
 API inbox передаёт `inbox.channel.secret`, account webhook — `webhook.secret`, headers/formula
-совпадают. Проверка активного live delivery scheme и synthetic fixture от Ops — NOT VERIFIED.
+совпадают. Ops подтвердил actual Chatwoot 4.18.0, Channel::Api inbox 12/account 4, совпадение secret с gateway
+и отсутствие account webhooks к gateway. `test/fixtures/chatwoot-4.18-trigger.json` создан actual
+`Webhooks::Trigger#request_headers` с **новым synthetic secret**, без network/DB. Он проверяется
+Vitest и isolated candidate; production signature/secret в bundle отсутствуют.
 
 ## Runtime и dependency decisions
 
@@ -104,7 +115,7 @@ package manifests, production dependencies и compiled dist. Образ/logs с�
 
 | AC  | Результат                                       | Доказательство / следующий шаг                                                                                                 |
 | --- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| G1  | NOT VERIFIED, локальный baseline сохранён       | Нужны current Ops image/source fingerprints и patch review                                                                     |
+| G1  | PASS reconstructed baseline                     | 36 compiled files equal, patch/ref/recovery retained; original TS/build-lock provenance explicitly unknown                     |
 | G2  | PASS local                                      | Оба включённых POST: malformed JSON 400, stub calls 0; callback mode fixture                                                   |
 | G3  | PASS local                                      | Empty/whitespace/null/array/scalars 400, unsupported media 415, bounded 64 KiB-chunk stream >25 MiB →413                       |
 | G4  | PASS local; live scheme NOT VERIFIED            | UTF-8/Unicode/whitespace/CRLF Buffer, NFC/byte mutation и missing/wrong headers; сверить actual Chatwoot с Ops                 |
@@ -133,7 +144,7 @@ in-flight задач текущими средствами. Нельзя объ�
 сохранения ACK-нутых сообщений, этот release не даёт GO без отдельного решения для обработки.
 Не запускать второй gateway с рабочими credentials; secrets не отключать ради smoke.
 
-После получения baseline: перенести подтверждённый patch, повторить все gates на финальном commit,
+После сверки baseline повторить все gates на финальном candidate source commit,
 из чистого checkout собрать для **подтверждённой Ops платформы**:
 
 ```bash
@@ -153,9 +164,9 @@ docker image inspect "$RELEASE_IMAGE" --format '{{.Id}} {{.Os}}/{{.Architecture}
 docker run --rm --network none --entrypoint node "$RELEASE_IMAGE" --version
 ```
 
-Далее изолированно проверить actual candidate, без production env и сообщений: app tests/fixtures,
+Изолированная проверка actual candidate, без production env и сообщений: app tests/fixtures,
 lock/compiled hashes, npm production tree, secret-free filesystem/history/logs и memory/peak/OOM
-в подтверждённом budget (saved Ops evidence: 128 MiB / 0.5 CPU; actual ещё нужен).
+в подтверждённом Ops budget 128 MiB / 0.5 CPU / swap 0.
 Identity передаваемого image: ID + registry digest либо SHA-256 restricted `docker save` archive;
 не требовать побайтового совпадения двух независимых builds. Записать commit/platform/identity/Node
 и пересчитать G1–G8. Текущие local compiled fingerprints не являются fingerprints candidate.
