@@ -86,7 +86,7 @@ it.each(['idle', 'pending', 'failed-and-pending', 'timeout'])(
         stdio: ['ignore', 'pipe', 'pipe'],
       },
     );
-    const exited = once(child, 'exit');
+    const exited = once(child, 'close');
     let logs = '';
     let errors = '';
     child.stdout.on('data', (chunk) => {

@@ -61,7 +61,7 @@ for (const mode of ['complete', 'timeout']) {
     },
     stdio: ['ignore', 'pipe', 'pipe'],
   });
-  const exited = once(child, 'exit');
+  const exited = once(child, 'close');
   let logs = '';
   let errors = '';
   child.stdout.on('data', (data) => {
