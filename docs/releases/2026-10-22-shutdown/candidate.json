@@ -1,5 +1,5 @@
 {
-  "status": "CANDIDATE: native graceful-shutdown verification/CI required before Ops rollout",
+  "status": "DEPLOYED: independent Ops verdict PASS AC1-AC8; managed shutdown fix verified",
   "sourceCommit": "2a2aaa571d1ac87ac9db29446545395859648556",
   "sourceTag": "gateway-shutdown-candidate-20261022",
   "tag": "chatwoot-vk-gateway:shutdown-20261022",
@@ -56,5 +56,11 @@
     "status": "PASS",
     "evidence": "github-ci.json",
     "url": "https://github.com/pavlikru/chatwoot-vk-gateway/actions/runs/39820759516"
-  }
+  },
+  "nativeImageInspectId": "sha256:08fe712e343abdd41673e36f773f83b043bb876a5454123547e7038b5fb4041f",
+  "productionAcceptance": "production-acceptance.json",
+  "nativeExactArchiveProof": ["native-contract.json", "native-shutdown.json"],
+  "productionStopTimeoutSeconds": 40,
+  "productionAppDeadlineMs": 30000,
+  "hostedMainCI": "https://github.com/pavlikru/chatwoot-vk-gateway/actions/runs/39822631065"
 }
