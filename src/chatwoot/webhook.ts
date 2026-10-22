@@ -5,13 +5,14 @@ import type { ChatwootWebhookPayload } from './types.js';
 /**
  * Verify a Chatwoot webhook HMAC signature.
  *
- * Chatwoot signs deliveries as `sha256=<hex>` where `<hex>` is
+ * Chatwoot account and API inbox webhooks sign deliveries when their webhook
+ * secret is present. The signature is `sha256=<hex>` where `<hex>` is
  * HMAC-SHA256(`{timestamp}.{raw_body}`, secret), sent in the
  * `X-Chatwoot-Signature` header alongside `X-Chatwoot-Timestamp`.
  *
- * NOTE: signature delivery depends on the Chatwoot version/integration. When no
- * secret is configured the gateway accepts unsigned payloads. Verify the exact
- * scheme against your deployment (see docs/TROUBLESHOOTING.md).
+ * Automation/macro webhook actions in Chatwoot 4.15.1 call the same delivery
+ * job without a secret, so they are unsigned. When no gateway secret is
+ * configured, the gateway accepts unsigned payloads. See docs/TROUBLESHOOTING.md.
  */
 export function verifySignature(
   rawBody: string,
@@ -19,9 +20,9 @@ export function verifySignature(
   signatureHeader: string | undefined,
   secret: string,
 ): boolean {
-  if (!signatureHeader) return false;
-  const provided = signatureHeader.replace(/^sha256=/, '');
-  const signedPayload = timestamp ? `${timestamp}.${rawBody}` : rawBody;
+  if (!timestamp || !signatureHeader?.startsWith('sha256=')) return false;
+  const provided = signatureHeader.slice('sha256='.length);
+  const signedPayload = `${timestamp}.${rawBody}`;
   const expected = createHmac('sha256', secret).update(signedPayload).digest('hex');
   const a = Buffer.from(expected, 'utf8');
   const b = Buffer.from(provided, 'utf8');
@@ -39,14 +40,16 @@ export function shouldForwardOutbound(payload: ChatwootWebhookPayload, config: C
   if (payload.event && payload.event !== 'message_created') return false;
   if (payload.message_type !== 'outgoing') return false;
   if (payload.private) return false;
-  const inboxId = payload.inbox?.id ?? payload.conversation?.id;
-  if (payload.inbox?.id !== undefined && payload.inbox.id !== config.chatwootInboxId) {
-    return false;
-  }
-  // When the inbox id is absent from the payload we still forward, relying on
-  // the inbox webhook being inbox-scoped.
-  void inboxId;
-  return true;
+  return extractInboxId(payload) === config.chatwootInboxId;
+}
+
+function extractInboxId(payload: ChatwootWebhookPayload): number | undefined {
+  return (
+    payload.inbox?.id ??
+    payload.inbox_id ??
+    payload.conversation?.inbox_id ??
+    payload.conversation?.inbox?.id
+  );
 }
 
 /** Extract the VK peer id (= contact `source_id`) from an outbound payload. */

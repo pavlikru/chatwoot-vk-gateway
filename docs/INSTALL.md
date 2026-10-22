@@ -70,7 +70,7 @@ CHATWOOT_URL=https://chat.example.com
 CHATWOOT_ACCOUNT_ID=1
 CHATWOOT_TOKEN=...
 CHATWOOT_INBOX_ID=7
-CHATWOOT_WEBHOOK_SECRET=    # опционально, если включена подпись вебхуков
+CHATWOOT_WEBHOOK_SECRET=    # пусто для первого теста; затем secret API-инбокса/account webhook
 ```
 
 ## 4. Запуск
@@ -87,6 +87,13 @@ npm run dev        # авто-перезагрузка; или: npm run build &&
 ```bash
 docker compose up -d --build
 docker compose logs -f
+```
+
+Для нескольких реплик включите общий дедуп-кэш: раскомментируйте сервис `redis` и `depends_on` в
+`docker-compose.yml`, затем задайте в `.env`:
+
+```dotenv
+REDIS_URL=redis://redis:6379
 ```
 
 Шлюз слушает порт `PORT` (по умолчанию 3000). Проверка:

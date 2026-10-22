@@ -31,6 +31,16 @@ describe('verifySignature', () => {
   it('rejects a missing signature', () => {
     expect(verifySignature(body, ts, undefined, secret)).toBe(false);
   });
+
+  it('rejects a missing timestamp', () => {
+    const sig = 'sha256=' + createHmac('sha256', secret).update(body).digest('hex');
+    expect(verifySignature(body, undefined, sig, secret)).toBe(false);
+  });
+
+  it('rejects signatures without the Chatwoot sha256 prefix', () => {
+    const sig = createHmac('sha256', secret).update(`${ts}.${body}`).digest('hex');
+    expect(verifySignature(body, ts, sig, secret)).toBe(false);
+  });
 });
 
 describe('shouldForwardOutbound', () => {
@@ -54,6 +64,23 @@ describe('shouldForwardOutbound', () => {
     expect(shouldForwardOutbound({ message_type: 'outgoing', inbox: { id: 99 } }, config)).toBe(
       false,
     );
+  });
+
+  it('accepts the configured inbox id from supported Chatwoot payload shapes', () => {
+    expect(shouldForwardOutbound({ message_type: 'outgoing', inbox_id: 7 }, config)).toBe(true);
+    expect(
+      shouldForwardOutbound({ message_type: 'outgoing', conversation: { inbox_id: 7 } }, config),
+    ).toBe(true);
+    expect(
+      shouldForwardOutbound(
+        { message_type: 'outgoing', conversation: { inbox: { id: 7 } } },
+        config,
+      ),
+    ).toBe(true);
+  });
+
+  it('fails closed when the inbox id is missing', () => {
+    expect(shouldForwardOutbound({ message_type: 'outgoing' }, config)).toBe(false);
   });
 });
 

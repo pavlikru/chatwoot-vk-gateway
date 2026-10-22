@@ -10,6 +10,16 @@ const optionalString = z
   .optional()
   .transform((v) => (v && v.length > 0 ? v : undefined));
 
+const optionalRedisUrl = optionalString.pipe(
+  z
+    .string()
+    .url('REDIS_URL must be a valid URL')
+    .refine((v) => ['redis:', 'rediss:'].includes(new URL(v).protocol), {
+      message: 'REDIS_URL must use redis:// or rediss://',
+    })
+    .optional(),
+);
+
 const schema = z
   .object({
     NODE_ENV: z.enum(['development', 'production', 'test']).default('production'),
@@ -31,7 +41,7 @@ const schema = z
     CHATWOOT_INBOX_ID: z.coerce.number().int().positive(),
     CHATWOOT_WEBHOOK_SECRET: optionalString,
 
-    REDIS_URL: optionalString,
+    REDIS_URL: optionalRedisUrl,
   })
   .superRefine((cfg, ctx) => {
     if (cfg.VK_MODE === 'longpoll' && cfg.VK_GROUP_ID === undefined) {

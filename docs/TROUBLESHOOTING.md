@@ -31,9 +31,18 @@
 - В логах при получении вебхука должно быть `relayed Chatwoot -> VK`. Если
   `outbound message without a resolvable VK peer id` — в payload нет `source_id`; проверьте,
   что контакт создан шлюзом (его `source_id` = id пользователя VK).
+- Исходящие сообщения форвардятся только когда payload содержит id нужного API-инбокса
+  (`inbox.id`, `inbox_id`, `conversation.inbox_id` или `conversation.inbox.id`). Если используется
+  account-level webhook и сообщения игнорируются, настройте Callback URL прямо в API-инбоксе `VK`.
 - Если `invalid signature` (401) — задан `CHATWOOT_WEBHOOK_SECRET`, но подпись не совпала.
-  Либо уберите секрет, либо сверьте схему подписи вашей версии Chatwoot (`X-Chatwoot-Signature`,
-  `X-Chatwoot-Timestamp`, HMAC-SHA256 от `{timestamp}.{body}`).
+  Для первого end-to-end теста оставьте `CHATWOOT_WEBHOOK_SECRET` пустым: тогда шлюз принимает
+  неподписанные доставки. После проверки доставки задайте его равным секрету API-инбокса или
+  account webhook в Chatwoot и перезапустите шлюз.
+- В Chatwoot 4.15.1 account webhooks и API inbox webhooks подписываются, когда у webhook/channel
+  есть `secret`: Chatwoot отправляет `X-Chatwoot-Timestamp` и `X-Chatwoot-Signature` со значением
+  `sha256=<hex>`, где `<hex>` — HMAC-SHA256 от `{timestamp}.{raw_json_body}`. Automation/macro
+  webhook actions в этой версии вызывают доставку без секрета и не подходят для включённого
+  `CHATWOOT_WEBHOOK_SECRET`.
 - Право `VK_TOKEN` должно включать отправку сообщений.
 
 ## Вложения не пересылаются
@@ -44,8 +53,13 @@
 
 ## Дубли сообщений
 
-- Повторные доставки отсекаются дедуп-кэшем (TTL 5 мин, в памяти). При нескольких репликах
-  настройте общий `REDIS_URL` (реализация Redis-стора — по плану, этап 6).
+- Повторные доставки отсекаются дедуп-кэшем (TTL 5 мин).
+- Без `REDIS_URL` кэш хранится в памяти процесса. Это нормально для одной реплики, но после
+  рестарта и между несколькими репликами история не общая.
+- Для продакшена с несколькими репликами настройте общий Redis и задайте
+  `REDIS_URL=redis://<host>:6379[/db]`.
+- Если Redis недоступен, шлюз не стартует. Проверьте адрес, сеть и логи
+  `redis dedup client error`.
 
 ## Полезные команды
 

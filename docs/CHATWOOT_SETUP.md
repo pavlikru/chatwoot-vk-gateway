@@ -36,11 +36,12 @@ npm run setup:inbox -- "VK" "https://<домен-шлюза>/chatwoot/webhook"
 
 ## 5. Подпись вебхуков (опционально)
 
-Если ваша версия/конфигурация Chatwoot подписывает доставки вебхуков, задайте общий секрет в
-`CHATWOOT_WEBHOOK_SECRET`. Тогда шлюз проверит заголовки `X-Chatwoot-Signature` и
-`X-Chatwoot-Timestamp` (HMAC-SHA256 от `{timestamp}.{body}`). Если секрет не задан —
-неподписанные доставки принимаются. Точную схему сверьте со своей версией Chatwoot
-(см. [TROUBLESHOOTING.md](TROUBLESHOOTING.md)).
+Для первого end-to-end теста оставьте `CHATWOOT_WEBHOOK_SECRET` пустым: шлюз примет неподписанную
+доставку. После подтверждения доставки задайте его равным secret API-инбокса в Chatwoot и
+перезапустите шлюз. В Chatwoot 4.15.1 API inbox webhook подписывается заголовками
+`X-Chatwoot-Timestamp` и `X-Chatwoot-Signature: sha256=<hex>`, где `<hex>` — HMAC-SHA256 от
+`{timestamp}.{raw_json_body}`. Automation webhook actions в этой версии не передают secret в job
+доставки и не подходят для включённого `CHATWOOT_WEBHOOK_SECRET`.
 
 ## Что делает шлюз через API
 

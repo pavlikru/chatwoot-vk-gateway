@@ -35,4 +35,13 @@ describe('loadConfig', () => {
       /CHATWOOT_URL/,
     );
   });
+
+  it('parses a valid Redis URL', () => {
+    const config = loadConfig({ ...base, REDIS_URL: 'redis://localhost:6379/0' });
+    expect(config.redisUrl).toBe('redis://localhost:6379/0');
+  });
+
+  it('rejects a non-Redis REDIS_URL', () => {
+    expect(() => loadConfig({ ...base, REDIS_URL: 'https://localhost:6379' })).toThrow(/REDIS_URL/);
+  });
 });
