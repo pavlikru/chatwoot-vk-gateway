@@ -1,0 +1,117 @@
+{
+  "status": "DEPLOYED: Ops production acceptance PASS; hosted GitHub CI PASS",
+  "sourceCommit": "7ca82d64d706e4a4faa7569389c774a6df2b6af9",
+  "sourceTag": "gateway-json-candidate-20261022",
+  "tag": "chatwoot-vk-gateway:json-20261022",
+  "imageInspectId": "sha256:8fbf59f70d3fcec7fdfa51a5cb982cafd616e1b2f77e6346ae083740f1e10f4f",
+  "repoDigests": [],
+  "platform": "linux/amd64",
+  "imageBytes": 205365313,
+  "archive": {
+    "archive": "/Users/pavel/.codex/visualizations/2026/10/22/01a16407-2b14-74f3-85f9-3f04c5ceb1a8/vk-gateway-release/candidate-image.tar.gz",
+    "bytes": 75392260,
+    "sha256": "d4cf1a56a726696f958f76d4941273884c04c3421e68da36a5d002b9689bdbad"
+  },
+  "baseImage": "node:24.22.1-alpine3.24@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53",
+  "lockSha256": "1fbdd9292a10b6a0f413f5cc16516372b7661d634f50fbbce922e446d9dbf58b",
+  "localGates": {
+    "format:check": 0,
+    "lint": 0,
+    "typecheck": 0,
+    "test": {
+      "exit": 0,
+      "passed": 82
+    },
+    "build": 0,
+    "audit": 0,
+    "auditRuntime": 0,
+    "dockerBuild": 0
+  },
+  "emulated128MiBContract": {
+    "result": "OOM",
+    "exitCode": 137,
+    "OOMKilled": true,
+    "network": "none",
+    "memoryLimitBytes": 134217728,
+    "memorySwapBytes": 134217728,
+    "cpu": 0.5
+  },
+  "emulated128MiBProcess": {
+    "image": "chatwoot-vk-gateway:json-20261022",
+    "network": "none",
+    "passed": false,
+    "failure": "process exited before readiness",
+    "finalState": {
+      "Status": "exited",
+      "Running": false,
+      "Paused": false,
+      "Restarting": false,
+      "OOMKilled": true,
+      "Dead": false,
+      "Pid": 0,
+      "ExitCode": 137,
+      "Error": "",
+      "StartedAt": "2026-10-22T15:18:58.778754088Z",
+      "FinishedAt": "2026-10-22T15:19:03.520015632Z"
+    },
+    "logs": []
+  },
+  "nativeInstructions": {
+    "contractScript": "/Users/pavel/Documents/Chatwoot_VK/docs/releases/2026-10-22-json/verify-candidate.mjs",
+    "processScript": "/Users/pavel/Documents/Chatwoot_VK/docs/releases/2026-10-22-json/verify-process.py",
+    "fixture": "/Users/pavel/Documents/Chatwoot_VK/test/fixtures/chatwoot-4.18-trigger.json",
+    "contractInvocation": "docker create -i --platform linux/amd64 --network none --memory 128m --memory-swap 128m --cpus 0.5 --name vk-candidate-contract --mount type=bind,src=<synthetic fixture>,dst=/tmp/actual-trigger-fixture.json,readonly --entrypoint node chatwoot-vk-gateway:json-20261022 --input-type=module; docker start -ai vk-candidate-contract < verify-candidate.mjs",
+    "processInvocation": "python3 verify-process.py chatwoot-vk-gateway:json-20261022 chatwoot-4.18-trigger.json",
+    "warning": "Only synthetic environment/network none. Default image process has VK_MODE=callback via verify-process.py. No production env/network/credentials."
+  },
+  "runtime": {
+    "node": "v24.22.1",
+    "npm": "11.19.1",
+    "platform": "linux/x64",
+    "installed": {
+      "dotenv": "18.0.8",
+      "fastify": "5.12.7",
+      "pino": "10.4.0",
+      "vk-io": "4.10.1",
+      "zod": "3.25.76",
+      "redis": "6.3.0"
+    }
+  },
+  "candidateCompiledMatchesLocal": true,
+  "acceptedG1G8": true,
+  "hostedCI": "PASS: https://github.com/pavlikru/chatwoot-vk-gateway/actions/runs/39816110525 (head 3597b141eef331358782e830e0bbd599594c3af8)",
+  "nativeImageInspectId": "sha256:64ff385887ed3ed9f5282da28937a330822eb58d0a11caebcddbf5f9f770ac3d",
+  "nativeLocalRepoDigest": "chatwoot-vk-gateway@sha256:64ff385887ed3ed9f5282da28937a330822eb58d0a11caebcddbf5f9f770ac3d",
+  "configDigest": "sha256:8fbf59f70d3fcec7fdfa51a5cb982cafd616e1b2f77e6346ae083740f1e10f4f",
+  "native128MiBContract": {
+    "result": "PASS",
+    "evidence": "native-contract.json",
+    "cases": 30,
+    "currentBytes": 31068160,
+    "peakBytes": 34852864,
+    "exitCode": 0,
+    "OOMKilled": false
+  },
+  "native128MiBProcess": {
+    "result": "PASS",
+    "evidence": "native-process.json",
+    "currentBytes": 32419840,
+    "peakBytes": 36331520,
+    "exitCode": 0,
+    "OOMKilled": false,
+    "shutdown": "SIGTERM exit 0"
+  },
+  "verificationScope": "Local/native synthetic tests and production O1-O8 accepted by Ops; hosted GitHub build and Docker jobs passed.",
+  "acceptance": {
+    "G1": "PASS",
+    "G2": "PASS",
+    "G3": "PASS",
+    "G4": "PASS",
+    "G5": "PASS",
+    "G6": "PASS",
+    "G7": "PASS",
+    "G8": "PASS: local gates, Docker build and hosted GitHub CI build/docker jobs"
+  },
+  "productionAcceptance": "production-acceptance.json",
+  "githubCIEvidence": "github-ci.json"
+}

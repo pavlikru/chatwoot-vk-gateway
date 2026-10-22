@@ -51,9 +51,12 @@ export interface ChatwootWebhookPayload {
   source_id?: string;
   attachments?: ChatwootWebhookAttachment[];
   sender?: { type?: string; name?: string };
+  inbox_id?: number;
   inbox?: { id?: number; name?: string };
   conversation?: {
     id?: number;
+    inbox_id?: number;
+    inbox?: { id?: number; name?: string };
     contact_inbox?: { source_id?: string };
     meta?: { sender?: { id?: number; identifier?: string | null } };
   };

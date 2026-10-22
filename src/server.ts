@@ -1,4 +1,5 @@
 import Fastify, { type FastifyInstance } from 'fastify';
+import { STATUS_CODES } from 'node:http';
 import type { Config } from './config.js';
 import type { Logger } from './logger.js';
 import type { VkCallbackBody } from './vk/types.js';
@@ -7,7 +8,7 @@ import { verifySignature } from './chatwoot/webhook.js';
 
 declare module 'fastify' {
   interface FastifyRequest {
-    rawBody?: string;
+    rawBody?: Buffer;
   }
 }
 
@@ -22,15 +23,34 @@ export interface ServerDeps {
 export function buildServer(deps: ServerDeps): FastifyInstance {
   const app = Fastify({ logger: false, bodyLimit: 25 * 1024 * 1024 });
 
-  // Keep the raw JSON body so Chatwoot HMAC signatures can be verified.
-  app.addContentTypeParser('application/json', { parseAs: 'string' }, (req, body, done) => {
-    const raw = typeof body === 'string' ? body : body.toString('utf8');
-    req.rawBody = raw;
-    try {
-      done(null, raw.length > 0 ? JSON.parse(raw) : {});
-    } catch (err) {
-      done(err as Error, undefined);
+  // Verify HMAC against the received bytes; let Fastify classify JSON errors.
+  const parseJson = app.getDefaultJsonParser('error', 'error');
+  app.removeContentTypeParser('text/plain');
+  app.addContentTypeParser<Buffer>('application/json', { parseAs: 'buffer' }, (req, body, done) => {
+    req.rawBody = body;
+    parseJson(req, body.toString('utf8'), done);
+  });
+
+  app.addHook('preValidation', async (req, reply) => {
+    if (
+      req.method === 'POST' &&
+      (req.body === null || typeof req.body !== 'object' || Array.isArray(req.body))
+    ) {
+      await reply.code(400).send({ error: 'JSON body must be an object' });
     }
+  });
+
+  app.setErrorHandler<{ statusCode?: number }>((error, req, reply) => {
+    const statusCode =
+      error.statusCode && error.statusCode >= 400 && error.statusCode < 600
+        ? error.statusCode
+        : 500;
+    // Error messages/stacks can contain request bodies or downstream credentials.
+    if (statusCode >= 500) {
+      deps.logger.error({ statusCode, requestId: req.id }, 'HTTP request failed');
+    }
+    const message = STATUS_CODES[statusCode] ?? 'Internal Server Error';
+    void reply.code(statusCode).send({ statusCode, error: message, message });
   });
 
   app.get('/health', async () => ({ status: 'ok' }));
@@ -53,6 +73,13 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
         secret,
       );
       if (!ok) {
+        deps.logger.warn(
+          {
+            hasTimestamp: Boolean(headerString(req.headers['x-chatwoot-timestamp'])),
+            hasSignature: Boolean(headerString(req.headers['x-chatwoot-signature'])),
+          },
+          'Chatwoot webhook rejected: invalid signature',
+        );
         await reply.code(401).send({ error: 'invalid signature' });
         return;
       }
@@ -61,7 +88,7 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
     await reply.code(200).send({ status: 'ok' });
     void deps
       .onChatwootWebhook(req.body as ChatwootWebhookPayload)
-      .catch((err) => deps.logger.error({ err }, 'chatwoot webhook processing failed'));
+      .catch(() => deps.logger.error('chatwoot webhook processing failed'));
   });
 
   return app;

@@ -38,7 +38,7 @@
 
 ## Быстрый старт (Long Poll, для теста)
 
-Требуется Node.js 20+.
+Требуется Node.js 24 LTS.
 
 ```bash
 git clone https://github.com/pavlikru/chatwoot-vk-gateway.git
@@ -53,6 +53,9 @@ npm run dev
 Напишите сообществу VK — сообщение появится в Chatwoot; ответьте из Chatwoot — придёт в VK.
 
 ## Запуск в Docker (продакшен)
+
+Для существующего production — [сверка baseline и release gates](docs/releases/2026-10-22-json/README.md)
+до пересборки. Команды ниже предназначены для новой установки.
 
 ```bash
 cp .env.example .env   # заполните, для прода VK_MODE=callback + PUBLIC_URL

@@ -1,0 +1,12 @@
+{
+  "synthetic": true,
+  "source": "/app/lib/webhooks/trigger.rb",
+  "secret": "ops-synthetic-secret-20261022-not-production",
+  "raw_body": "{\n  \"event\": \"ops_synthetic_signature_contract\", \"text\": \"Тест café é\"\n}\n",
+  "headers": {
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    "X-Chatwoot-Timestamp": "1792681706",
+    "X-Chatwoot-Signature": "sha256=b54fb7ed6522150399907d233e3a3e3dc317fd40fb5bbcd6d51e0edbf8761fbc"
+  }
+}

@@ -35,8 +35,8 @@ export async function uploadAttachmentsToVk(
         });
         result.push(doc.toString());
       }
-    } catch (err) {
-      logger.error({ err, url: att.data_url }, 'failed to upload attachment to VK');
+    } catch {
+      logger.error('failed to upload attachment to VK');
     }
   }
   return result;

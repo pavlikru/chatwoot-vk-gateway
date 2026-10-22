@@ -1,0 +1,55 @@
+Candidate source gates UTC: 2026-10-22T15:13:29.328500+00:00
+
+$ npm run format:check
+
+> chatwoot-vk-gateway@0.1.0 format:check
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+EXIT 0
+
+$ npm run lint
+
+> chatwoot-vk-gateway@0.1.0 lint
+> eslint .
+
+EXIT 0
+
+$ npm run typecheck
+
+> chatwoot-vk-gateway@0.1.0 typecheck
+> tsc -p tsconfig.json --noEmit
+
+EXIT 0
+
+$ npm test
+
+> chatwoot-vk-gateway@0.1.0 test
+> vitest run
+
+
+ RUN  v5.0.5 /Users/pavel/Documents/Chatwoot_VK
+
+
+ Test Files  7 passed (7)
+      Tests  82 passed (82)
+   Start at  12:13:32
+   Duration  483ms (tests 66%, import 25%, transform 7%, worker 2%)
+
+EXIT 0
+
+$ npm run build
+
+> chatwoot-vk-gateway@0.1.0 build
+> tsc -p tsconfig.build.json
+
+EXIT 0
+
+$ npm audit
+found 0 vulnerabilities
+EXIT 0
+
+$ npm audit --omit=dev
+found 0 vulnerabilities
+EXIT 0

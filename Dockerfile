@@ -1,5 +1,5 @@
 # ─── Build stage ──────────────────────────────────────────────────────────────
-FROM node:20-alpine AS build
+FROM node:24.22.1-alpine3.24@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53 AS build
 WORKDIR /app
 
 COPY package.json package-lock.json ./
@@ -10,11 +10,11 @@ COPY src ./src
 RUN npm run build && npm prune --omit=dev
 
 # ─── Runtime stage ────────────────────────────────────────────────────────────
-FROM node:20-alpine AS runtime
+FROM node:24.22.1-alpine3.24@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53 AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
 
-COPY package.json ./
+COPY package.json package-lock.json ./
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
 

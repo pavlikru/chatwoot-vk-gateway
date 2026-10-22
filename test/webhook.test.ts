@@ -1,4 +1,5 @@
 import { createHmac } from 'node:crypto';
+import triggerFixture from './fixtures/chatwoot-4.18-trigger.json' with { type: 'json' };
 import { describe, expect, it } from 'vitest';
 import { loadConfig, type Config } from '../src/config.js';
 import { extractPeerId, shouldForwardOutbound, verifySignature } from '../src/chatwoot/webhook.js';
@@ -31,6 +32,16 @@ describe('verifySignature', () => {
   it('rejects a missing signature', () => {
     expect(verifySignature(body, ts, undefined, secret)).toBe(false);
   });
+
+  it('rejects a missing timestamp', () => {
+    const sig = 'sha256=' + createHmac('sha256', secret).update(body).digest('hex');
+    expect(verifySignature(body, undefined, sig, secret)).toBe(false);
+  });
+
+  it('rejects signatures without the Chatwoot sha256 prefix', () => {
+    const sig = createHmac('sha256', secret).update(`${ts}.${body}`).digest('hex');
+    expect(verifySignature(body, ts, sig, secret)).toBe(false);
+  });
 });
 
 describe('shouldForwardOutbound', () => {
@@ -55,6 +66,23 @@ describe('shouldForwardOutbound', () => {
       false,
     );
   });
+
+  it('accepts the configured inbox id from supported Chatwoot payload shapes', () => {
+    expect(shouldForwardOutbound({ message_type: 'outgoing', inbox_id: 7 }, config)).toBe(true);
+    expect(
+      shouldForwardOutbound({ message_type: 'outgoing', conversation: { inbox_id: 7 } }, config),
+    ).toBe(true);
+    expect(
+      shouldForwardOutbound(
+        { message_type: 'outgoing', conversation: { inbox: { id: 7 } } },
+        config,
+      ),
+    ).toBe(true);
+  });
+
+  it('fails closed when the inbox id is missing', () => {
+    expect(shouldForwardOutbound({ message_type: 'outgoing' }, config)).toBe(false);
+  });
 });
 
 describe('extractPeerId', () => {
@@ -68,4 +96,26 @@ describe('extractPeerId', () => {
   it('returns undefined when no source id is present', () => {
     expect(extractPeerId({})).toBeUndefined();
   });
+});
+
+it('accepts a synthetic fixture signed by actual Chatwoot 4.18 Trigger code', () => {
+  expect(triggerFixture.synthetic).toBe(true);
+  const timestamp = triggerFixture.headers['X-Chatwoot-Timestamp'];
+  const signature = triggerFixture.headers['X-Chatwoot-Signature'];
+  expect(
+    verifySignature(
+      Buffer.from(triggerFixture.raw_body),
+      timestamp,
+      signature,
+      triggerFixture.secret,
+    ),
+  ).toBe(true);
+  expect(
+    verifySignature(
+      Buffer.from(triggerFixture.raw_body + ' '),
+      timestamp,
+      signature,
+      triggerFixture.secret,
+    ),
+  ).toBe(false);
 });

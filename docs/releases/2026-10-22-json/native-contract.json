@@ -1,0 +1,23 @@
+{
+  "utc": "2026-10-22T15:24:04.722374+00:00",
+  "tag": "chatwoot-vk-gateway:json-20261022",
+  "image_inspect_id": "sha256:64ff385887ed3ed9f5282da28937a330822eb58d0a11caebcddbf5f9f770ac3d",
+  "config_digest": "sha256:8fbf59f70d3fcec7fdfa51a5cb982cafd616e1b2f77e6346ae083740f1e10f4f",
+  "platform": "linux/amd64",
+  "network": "none",
+  "limits": {
+    "memory": 134217728,
+    "memswap": 134217728,
+    "cpus": 0.5
+  },
+  "exit": 0,
+  "stdout": "{\"passed\":true,\"node\":\"v24.22.1\",\"platform\":\"linux/x64\",\"cases\":30,\"businessCalls\":{\"chatwoot\":1,\"vk\":1},\"memory\":{\"memory.current\":\"31068160\",\"memory.peak\":\"34852864\",\"memory.max\":\"134217728\",\"memory.events\":\"low 0\\nhigh 0\\nmax 0\\noom 0\\noom_kill 0\\noom_group_kill 0\\nsock_throttled 0\",\"memory.swap.max\":\"0\",\"cpu.max\":\"50000 100000\"},\"installed\":{\"dotenv\":\"18.0.8\",\"fastify\":\"5.12.7\",\"pino\":\"10.4.0\",\"vk-io\":\"4.10.1\",\"zod\":\"3.25.76\",\"redis\":\"6.3.0\"},\"sha256\":{\"dist/chatwoot/client.js\":\"d7d90446d1d3228e449d61589616644068a68884dd086ed9bf115081bb65c999\",\"dist/chatwoot/client.js.map\":\"9d7b596dcd7caf61aa674b99285592378fd8c601780e4782ad617fcadf3bf360\",\"dist/chatwoot/types.js\":\"9513569d22d1355f169443d76833ab43ffa50775c84628cb8b5b86d29d91d050\",\"dist/chatwoot/types.js.map\":\"a39819510e1dee054b71196a74da8fb52746428baa252b2ef9c583b8826a00b8\",\"dist/chatwoot/webhook.js\":\"e371ed9da9b175267d73e50364eeb9e559c12c4e3aa5bbb793f632fe148d7e3c\",\"dist/chatwoot/webhook.js.map\":\"2f78dabc4ce329471dc145eb9002568adcd3bfa081dc9ab934b22d973e0457d9\",\"dist/config.js\":\"ebb6e46732bb63eda2d20d6e7b65268c403dd92ff353d54ca0bc3615610b22f6\",\"dist/config.js.map\":\"e30a1e5c76146c21b501df1efc9fb0d93ee7b4f82d2eec0b4160894d6e0c836b\",\"dist/core/dedup.js\":\"bcc1134e1bf5c33b798a3001bd6cd9320a46036cd06a7edfda38397c7416c263\",\"dist/core/dedup.js.map\":\"af32af2204cb84eca32032efdb911717fa7d3c0728895980d2543cfc6601184a\",\"dist/core/inbound.js\":\"621bf5839024df7636e181dc1bb418e0be1238c0fda66e72cac8f4311948a1fd\",\"dist/core/inbound.js.map\":\"34b1d4c44f3385237779c2f1a45fe1809a85428d32c900b36fbdd23b9f9f0612\",\"dist/core/mapping.js\":\"ca1ee06bd0e6f5e1fee9adf49d2606d83ab5a98ce56b43650a89e1e870f69d17\",\"dist/core/mapping.js.map\":\"81d487983783809ed981b2e1d7dd6b4fb500b60eb6d5ae93c4eca70aefe84f85\",\"dist/core/outbound.js\":\"013813d91396daf22da883ae298d6b95ff5e27a82ef87e838609a401d1f86c2e\",\"dist/core/outbound.js.map\":\"70b47c39b4f4cf991b29b6cc89d6c6c69aa75f60be04f99dc29bb319520dcb54\",\"dist/index.js\":\"dc5df5095b0ad9af0b67888815d1da6406882a80667741bcab3016af84891323\",\"dist/index.js.map\":\"7cc3bf4fd450178a92dae9bab3afc951a79ff02631fda05ac7737f22be330c5b\",\"dist/logger.js\":\"6ec6c0768cc3404cd3c904e37763786a53e9cc17a82564e690783aeda3ffc55d\",\"dist/logger.js.map\":\"25161f114f66375ab3ec2855a305f0828843071b88c9d0b2a0a59bf05894d293\",\"dist/server.js\":\"ccf56a8413d9b98dfeaf92a9a82823e72328fc89270a5d714fc0d3ae881caffa\",\"dist/server.js.map\":\"f44541274dfe5953d96e460e0115115ccb23857df2ddedea2e9346e8b524f4f7\",\"dist/types.js\":\"05876809e67c97518802b3e59896c5b502637a8943962262578696812251c52a\",\"dist/types.js.map\":\"20dcfc994cd97cc913d60e24c773b9b674b54a36b5a49f5f9962b5c32861411d\",\"dist/util/download.js\":\"84ed2219c30a67d7e012ca7c746dd51656f635072a2d3176dbe90f99a0daef9a\",\"dist/util/download.js.map\":\"da84189da69ea6f8f9bb8d2ade99663783cc005d11fc0b7ecb3f7ff0d07a6e5d\",\"dist/vk/attachments.in.js\":\"464d074b55e3685a777056211251e9e64790bec3f8f84c83528c524603904ceb\",\"dist/vk/attachments.in.js.map\":\"9a859c2f956aae845be07ceba0cfde11aae3e49f0c571ffe0eecfd93af43d47e\",\"dist/vk/attachments.out.js\":\"244941b974876264ff0a5f8562fb4d7dd7ec0bda7d8626e4920ecbe56d7d5140\",\"dist/vk/attachments.out.js.map\":\"ee72e96e88a1417c67001e70c70ebc7c9c0174c6ff2dca30b536ba600d226068\",\"dist/vk/client.js\":\"077d230bc8b584f7de15d8a9d79ccec6b2f2b953822e9f4ebb364b0ea05d9c8b\",\"dist/vk/client.js.map\":\"8f26ca02143f2d7efe283dd7b87c6b3a5a48ca707ef35ae4c246c34b86edee71\",\"dist/vk/types.js\":\"5f4da71f4af67eb22ee8ccf8f7b75cb22dcfd0d60c97217a0a4acc34fbaca640\",\"dist/vk/types.js.map\":\"c3cc0e21e28107b2c6665ddc7a664c28a256401f6ac5c567cb8d1745bd3720c5\",\"dist/vk/updates.js\":\"cbd2544244be10ddfc007ee280749bc22b562b79a341100941d7931ca885c98c\",\"dist/vk/updates.js.map\":\"74156e7aa7a5510301810ec785e39235db363d7660556f0b1fb18d60d035754d\",\"package-lock.json\":\"1fbdd9292a10b6a0f413f5cc16516372b7661d634f50fbbce922e446d9dbf58b\"}}\n",
+  "stderr": "",
+  "state": {
+    "Status": "exited",
+    "ExitCode": 0,
+    "OOMKilled": false,
+    "StartedAt": "2026-10-22T15:24:04.801638542Z",
+    "FinishedAt": "2026-10-22T15:24:06.161469458Z"
+  }
+}

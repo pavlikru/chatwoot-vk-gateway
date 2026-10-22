@@ -1,0 +1,17 @@
+[
+  {
+    "source": "/Users/pavel/Documents/Chatwoot_VK/docs/releases/2026-10-22-json/verify-candidate.mjs",
+    "remote": "verify-candidate.mjs",
+    "sha256": "3d6b535fe989c7c3b8727f51c8b59bf083f13c5599143d5c4d644cf104b12e34"
+  },
+  {
+    "source": "/Users/pavel/Documents/Chatwoot_VK/docs/releases/2026-10-22-json/verify-process.py",
+    "remote": "verify-process.py",
+    "sha256": "0875718d76a22d06dcad2f18606fdd8db6bcb473f302cf3ae222c9b8eeb0f6c8"
+  },
+  {
+    "source": "/Users/pavel/Documents/n8n-codex/.agent/tasks/T-vk-gateway-ops-20261022/raw/actual-trigger-fixture.json",
+    "remote": "actual-trigger-fixture.json",
+    "sha256": "853aa49979e8c2761065a820e4e7228f14833a4b65654721c9c79179e40c2499"
+  }
+]

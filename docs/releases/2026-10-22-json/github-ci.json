@@ -1,0 +1,21 @@
+{
+  "status": "completed",
+  "conclusion": "success",
+  "headSha": "3597b141eef331358782e830e0bbd599594c3af8",
+  "url": "https://github.com/pavlikru/chatwoot-vk-gateway/actions/runs/39816110525",
+  "createdAt": "2026-10-22T16:41:57Z",
+  "updatedAt": "2026-10-22T16:46:17Z",
+  "jobs": [
+    {
+      "name": "build",
+      "conclusion": "success",
+      "url": "https://github.com/pavlikru/chatwoot-vk-gateway/actions/runs/39816110525/job/119954990629"
+    },
+    {
+      "name": "docker",
+      "conclusion": "success",
+      "url": "https://github.com/pavlikru/chatwoot-vk-gateway/actions/runs/39816110525/job/119955225268"
+    }
+  ],
+  "scope": "Hosted CI verifies the release code; subsequent commits change release documentation/evidence only. PR checks must also pass at merge."
+}

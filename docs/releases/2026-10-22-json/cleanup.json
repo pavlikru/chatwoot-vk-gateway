@@ -1,0 +1,27 @@
+{
+  "freeBytesBeforeTemporaryCleanup": 27835506688,
+  "freeBytesAfterTemporaryCleanup": 27835514880,
+  "measuredFreeBytesChange": 8192,
+  "removedTaskTemporaryFiles": [
+    "/tmp/chatwoot-vk-baseline-ref",
+    "/tmp/chatwoot-vk-candidate.iid",
+    "/tmp/chatwoot-vk-build.log",
+    "/tmp/chatwoot-vk-contract.json",
+    "/tmp/chatwoot-vk-contract.stderr",
+    "/tmp/chatwoot-vk-contract-state.json",
+    "/tmp/chatwoot-vk-process.json",
+    "/tmp/chatwoot-vk-process.stderr",
+    "/tmp/chatwoot-vk-memory-stages.jsonl",
+    "/tmp/chatwoot-vk-memory-stages.stderr",
+    "/tmp/chatwoot-vk-archive.json",
+    "/tmp/chatwoot-vk-image-metadata.json",
+    "/tmp/chatwoot-vk-verify-process.py"
+  ],
+  "preserved": [
+    "candidate image/cache",
+    "candidate image archive",
+    "Ops previous recovery image/archive",
+    "all committed source/baseline evidence"
+  ],
+  "dockerPrunePerformed": false
+}

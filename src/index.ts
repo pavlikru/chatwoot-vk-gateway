@@ -4,7 +4,7 @@ import { buildServer } from './server.js';
 import { ChatwootClient } from './chatwoot/client.js';
 import { createVkClient } from './vk/client.js';
 import { buildCallbackHandler, startLongPoll } from './vk/updates.js';
-import { InMemoryDedupStore } from './core/dedup.js';
+import { createDedupStore } from './core/dedup.js';
 import { processVkUpdate } from './core/inbound.js';
 import { processChatwootWebhook } from './core/outbound.js';
 import type { VkUpdate } from './vk/types.js';
@@ -16,7 +16,7 @@ async function main(): Promise<void> {
 
   const vk = createVkClient(config);
   const chatwoot = new ChatwootClient(config, logger);
-  const dedup = new InMemoryDedupStore();
+  const dedup = await createDedupStore(config, logger);
   const abort = new AbortController();
 
   const onUpdate = (update: VkUpdate): Promise<void> =>
@@ -42,6 +42,7 @@ async function main(): Promise<void> {
     logger.info({ signal }, 'shutting down');
     abort.abort();
     await app.close();
+    await dedup.close();
     process.exit(0);
   };
   process.on('SIGINT', () => void shutdown('SIGINT'));
