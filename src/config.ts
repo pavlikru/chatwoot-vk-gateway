@@ -24,6 +24,7 @@ const schema = z
   .object({
     NODE_ENV: z.enum(['development', 'production', 'test']).default('production'),
     PORT: z.coerce.number().int().positive().default(3000),
+    SHUTDOWN_TIMEOUT_MS: z.coerce.number().int().positive().max(2_147_483_647).default(30_000),
     PUBLIC_URL: optionalString,
     LOG_LEVEL: z.enum(['trace', 'debug', 'info', 'warn', 'error', 'fatal']).default('info'),
     MAX_ATTACHMENT_MB: z.coerce.number().positive().default(50),
@@ -71,6 +72,7 @@ const schema = z
 export interface Config {
   nodeEnv: 'development' | 'production' | 'test';
   port: number;
+  shutdownTimeoutMs: number;
   publicUrl?: string;
   logLevel: 'trace' | 'debug' | 'info' | 'warn' | 'error' | 'fatal';
   maxAttachmentBytes: number;
@@ -107,6 +109,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
   return {
     nodeEnv: c.NODE_ENV,
     port: c.PORT,
+    shutdownTimeoutMs: c.SHUTDOWN_TIMEOUT_MS,
     publicUrl: c.PUBLIC_URL,
     logLevel: c.LOG_LEVEL,
     maxAttachmentBytes: Math.round(c.MAX_ATTACHMENT_MB * 1024 * 1024),

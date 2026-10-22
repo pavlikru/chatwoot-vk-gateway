@@ -1,11 +1,10 @@
 import type { VK } from 'vk-io';
+import { setTimeout as sleep } from 'node:timers/promises';
 import type { Config } from '../config.js';
 import type { Logger } from '../logger.js';
 import type { VkCallbackBody, VkUpdate } from './types.js';
 
 export type UpdateHandler = (update: VkUpdate) => Promise<void>;
-
-const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
 
 interface LongPollServer {
   key: string;
@@ -42,6 +41,7 @@ export async function startLongPoll(
   while (!signal.aborted) {
     try {
       if (!server) server = await getServer();
+      if (signal.aborted) break;
 
       const url = `${server.server}?act=a_check&key=${server.key}&ts=${server.ts}&wait=25`;
       const res = await fetch(url, { signal });
@@ -64,7 +64,7 @@ export async function startLongPoll(
       if (signal.aborted) break;
       logger.error({ err }, 'long poll error, retrying in 3s');
       server = null;
-      await sleep(3000);
+      await sleep(3000, undefined, { signal }).catch(() => {});
     }
   }
   logger.info('VK long poll stopped');
