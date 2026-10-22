@@ -53,6 +53,13 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
         secret,
       );
       if (!ok) {
+        deps.logger.warn(
+          {
+            hasTimestamp: Boolean(headerString(req.headers['x-chatwoot-timestamp'])),
+            hasSignature: Boolean(headerString(req.headers['x-chatwoot-signature'])),
+          },
+          'Chatwoot webhook rejected: invalid signature',
+        );
         await reply.code(401).send({ error: 'invalid signature' });
         return;
       }
