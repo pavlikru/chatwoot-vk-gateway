@@ -84,11 +84,11 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
         return;
       }
     }
-    // Acknowledge fast; process asynchronously.
-    await reply.code(200).send({ status: 'ok' });
+    // Register the delivery before ACK so shutdown cannot miss accepted work.
     void deps
       .onChatwootWebhook(req.body as ChatwootWebhookPayload)
       .catch(() => deps.logger.error('chatwoot webhook processing failed'));
+    await reply.code(200).send({ status: 'ok' });
   });
 
   return app;

@@ -190,7 +190,7 @@ describe('Chatwoot authentication and acknowledgement', () => {
     },
   );
 
-  it('acknowledges before processing finishes and close does not drain background work', async () => {
+  it('acknowledges before webhook processing finishes', async () => {
     const f = fixture();
     let finish!: () => void;
     const pending = new Promise<void>((resolve) => {
@@ -205,7 +205,6 @@ describe('Chatwoot authentication and acknowledgement', () => {
       });
       expect(res.statusCode).toBe(200);
       expect(res.json()).toEqual({ status: 'ok' });
-      await f.app.close();
       expect(f.onChatwootWebhook).toHaveBeenCalledOnce();
     } finally {
       finish();
@@ -242,7 +241,7 @@ describe('VK callback contract', () => {
     expect(f.onUpdate).not.toHaveBeenCalled();
   });
 
-  it('acknowledges asynchronously; close does not drain callback work', async () => {
+  it('acknowledges before callback processing finishes', async () => {
     const f = fixture();
     let finish!: () => void;
     const pending = new Promise<void>((resolve) => {
@@ -260,7 +259,6 @@ describe('VK callback contract', () => {
       expect(res.statusCode).toBe(200);
       expect(res.body).toBe('ok');
       expect(f.onUpdate).toHaveBeenCalledWith(payload);
-      await f.app.close();
     } finally {
       finish();
       await pending;
@@ -319,4 +317,22 @@ it.each(endpoints)('logs asynchronous %s failures without request data', async (
   expect(f.logs.join('')).toContain('failed');
   expect(res.body + f.logs.join('')).not.toContain(marker);
   expect(f.logs.join('')).not.toContain('synthetic-vk-secret');
+});
+
+it('registers outbound processing before sending a successful ACK', async () => {
+  const f = fixture();
+  const events: string[] = [];
+  f.onChatwootWebhook.mockImplementation(async () => {
+    events.push('registered');
+  });
+  f.app.addHook('onSend', async () => {
+    events.push('ack');
+  });
+  const res = await f.app.inject({
+    method: 'POST',
+    url: '/chatwoot/webhook',
+    payload: { event: 'message_created' },
+  });
+  expect(res.statusCode).toBe(200);
+  expect(events).toEqual(['registered', 'ack']);
 });

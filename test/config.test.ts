@@ -14,6 +14,7 @@ describe('loadConfig', () => {
   it('parses a valid longpoll config and strips the trailing slash', () => {
     const config = loadConfig({ ...base } as NodeJS.ProcessEnv);
     expect(config.vkMode).toBe('longpoll');
+    expect(config.shutdownTimeoutMs).toBe(30_000);
     expect(config.vkGroupId).toBe(123);
     expect(config.chatwootUrl).toBe('https://chat.example.com');
     expect(config.maxAttachmentBytes).toBe(50 * 1024 * 1024);
@@ -45,3 +46,16 @@ describe('loadConfig', () => {
     expect(() => loadConfig({ ...base, REDIS_URL: 'https://localhost:6379' })).toThrow(/REDIS_URL/);
   });
 });
+
+it('accepts a custom shutdown deadline', () => {
+  expect(loadConfig({ ...base, SHUTDOWN_TIMEOUT_MS: '5000' }).shutdownTimeoutMs).toBe(5000);
+});
+
+it.each(['0', '-1', '1.5', '2147483648', 'invalid'])(
+  'rejects invalid shutdown deadline %s',
+  (value) => {
+    expect(() => loadConfig({ ...base, SHUTDOWN_TIMEOUT_MS: value })).toThrow(
+      /SHUTDOWN_TIMEOUT_MS/,
+    );
+  },
+);

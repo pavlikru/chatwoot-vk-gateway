@@ -1,0 +1,60 @@
+{
+  "status": "CANDIDATE: native graceful-shutdown verification/CI required before Ops rollout",
+  "sourceCommit": "2a2aaa571d1ac87ac9db29446545395859648556",
+  "sourceTag": "gateway-shutdown-candidate-20261022",
+  "tag": "chatwoot-vk-gateway:shutdown-20261022",
+  "configDigest": "sha256:96c2db4b832ce77415f7d329927eace5776298e7ffa8ccb0bb8ced723ec2dee6",
+  "localImageInspectId": "sha256:96c2db4b832ce77415f7d329927eace5776298e7ffa8ccb0bb8ced723ec2dee6",
+  "platform": "linux/amd64",
+  "runtime": {
+    "node": "v24.22.1",
+    "npm": "11.19.1"
+  },
+  "archive": {
+    "path": "/Users/pavel/.codex/visualizations/2026/10/22/01a16407-2b14-74f3-85f9-3f04c5ceb1a8/vk-gateway-shutdown-release/candidate-image.tar.gz",
+    "bytes": 75392717,
+    "sha256": "8aa56af9ff68d556416f50cbb7fa44369ab357fa1e76c128692eddd32ae55ffb"
+  },
+  "lockSha256": "1fbdd9292a10b6a0f413f5cc16516372b7661d634f50fbbce922e446d9dbf58b",
+  "baseImage": "node:24.22.1-alpine3.24@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53",
+  "localGates": {
+    "format": 0,
+    "lint": 0,
+    "typecheck": 0,
+    "tests": 95,
+    "build": 0,
+    "dockerBuild": 0
+  },
+  "pullRequest": "https://github.com/pavlikru/chatwoot-vk-gateway/pull/5",
+  "requiredProductionDiff": ["gateway image pin only", "gateway stop_grace_period: 40s"],
+  "shutdownDeadlineMs": 30000,
+  "newProductionEnvRequired": false,
+  "preserve": [
+    "all gateway secrets/env",
+    "networks",
+    "128MiB/0.5CPU limits",
+    "other services",
+    "previous image/config recovery"
+  ],
+  "nativeVerification": {
+    "shutdownScript": "/Users/pavel/Documents/Chatwoot_VK/docs/releases/2026-10-22-shutdown/verify-shutdown.mjs",
+    "contractScript": "/Users/pavel/Documents/Chatwoot_VK/docs/releases/2026-10-22-json/verify-candidate.mjs",
+    "fixture": "/Users/pavel/Documents/Chatwoot_VK/test/fixtures/chatwoot-4.18-trigger.json",
+    "network": "none",
+    "memory": 134217728,
+    "memswap": 134217728,
+    "cpus": 0.5,
+    "entrypoint": "node --input-type=module; feed script via stdin from /app",
+    "timeoutCaseExpectedExit": 1,
+    "scriptOuterExpectedExit": 0
+  },
+  "previousCandidate": {
+    "sourceCommit": "7ca82d64d706e4a4faa7569389c774a6df2b6af9",
+    "configDigest": "sha256:8fbf59f70d3fcec7fdfa51a5cb982cafd616e1b2f77e6346ae083740f1e10f4f"
+  },
+  "githubCI": {
+    "status": "PASS",
+    "evidence": "github-ci.json",
+    "url": "https://github.com/pavlikru/chatwoot-vk-gateway/actions/runs/39820759516"
+  }
+}
