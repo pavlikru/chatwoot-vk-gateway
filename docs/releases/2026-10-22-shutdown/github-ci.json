@@ -1,0 +1,18 @@
+{
+  "status": "completed",
+  "conclusion": "success",
+  "headSha": "2a2aaa571d1ac87ac9db29446545395859648556",
+  "url": "https://github.com/pavlikru/chatwoot-vk-gateway/actions/runs/39820759516",
+  "jobs": [
+    {
+      "name": "build",
+      "conclusion": "success",
+      "url": "https://github.com/pavlikru/chatwoot-vk-gateway/actions/runs/39820759516/job/119971092434"
+    },
+    {
+      "name": "docker",
+      "conclusion": "success",
+      "url": "https://github.com/pavlikru/chatwoot-vk-gateway/actions/runs/39820759516/job/119971335797"
+    }
+  ]
+}

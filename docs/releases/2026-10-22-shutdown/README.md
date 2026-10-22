@@ -49,3 +49,14 @@ identity и archive SHA, прогоняется native с synthetic env/network 
 трогать, не запускать параллельный gateway с рабочими credentials.
 
 Production rollout выполняет Ops; app-команда подготавливает проверенный candidate, PR/CI и handoff.
+
+## Собранный candidate
+
+Source `2a2aaa571d1ac87ac9db29446545395859648556`, тег `gateway-shutdown-candidate-20261022`.
+Image `chatwoot-vk-gateway:shutdown-20261022`, config digest
+`sha256:96c2db4b832ce77415f7d329927eace5776298e7ffa8ccb0bb8ced723ec2dee6`.
+Archive SHA-256 `8aa56af9ff68d556416f50cbb7fa44369ab357fa1e76c128692eddd32ae55ffb`.
+[Полные identity/handoff inputs](candidate.json); [actual compiled/runtime fingerprints](image-metadata.json).
+Сборка из clean source linux/amd64 завершена; actual Node 24.22.1, lock/compiled SHA совпали с local build.
+95 local tests и все обычные gates PASS; [hosted CI](github-ci.json): build/docker success.
+Native 128 MiB/.5CPU shutdown proof и production rollout ожидают Ops; этот candidate не объявлен deployed.
