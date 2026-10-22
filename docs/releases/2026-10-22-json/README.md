@@ -1,6 +1,6 @@
 # VK gateway JSON fix — source bundle, 22 октября 2026
 
-**Статус: RELEASED — production принят Ops по O1–O8; GitHub CI запускается перед merge.**
+**Статус: RELEASED — production принят Ops по O1–O8, hosted GitHub CI PASS.**
 Первый source snapshot: `099cbd2` / `gateway-json-source-20261022`. Candidate source `7ca82d64d706e4a4faa7569389c774a6df2b6af9`, тег `gateway-json-candidate-20261022`.
 [Image identity, archive SHA и команды](candidate.json); production rollout выполняет Ops по ТЗ 2.
 
@@ -149,16 +149,16 @@ confirmation, actual Trigger signature, malformed JSON по HTTP, 5s idle sample
 
 ## Проверки G1–G8
 
-| AC  | Результат                                    | Доказательство / следующий шаг                                                                                                                  |
-| --- | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| G1  | PASS reconstructed baseline                  | 36 compiled files equal, patch/ref/recovery retained; original TS/build-lock provenance explicitly unknown                                      |
-| G2  | PASS local + native candidate                | Оба включённых POST: malformed JSON 400, stub calls 0; callback mode fixture                                                                    |
-| G3  | PASS local + native candidate                | Empty/whitespace/null/array/scalars 400, unsupported media 415, bounded 64 KiB-chunk stream >25 MiB →413                                        |
-| G4  | PASS local/actual live Trigger fixture       | UTF-8/Unicode/whitespace/CRLF Buffer, NFC/byte mutation и missing/wrong headers; actual Chatwoot 4.18.0 scheme/secret equality подтверждены Ops |
-| G5  | PASS stubs; live delivery NOT VERIFIED       | Secret/confirmation, ACK, фильтры incoming/private/inbox/event, VK message_reply, dedup, photo/doc uploads, inbound file relay                  |
-| G6  | PASS local + native tested errors            | Captured pino logs и responses без synthetic body/secret/signature markers; internal failure остаётся 500                                       |
-| G7  | PASS                                         | Lock/base digest сохранены, source tag известен; linux/amd64, image/Node/lock/archive известны; native contract/process budget PASS             |
-| G8  | Local gates + Docker PASS; hosted CI NOT RUN | [candidate-gates.txt](candidate-gates.txt), 82 tests, Docker build exit 0; push/hosted CI не выполнялись                                        |
+| AC  | Результат                              | Доказательство / следующий шаг                                                                                                                  |
+| --- | -------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| G1  | PASS reconstructed baseline            | 36 compiled files equal, patch/ref/recovery retained; original TS/build-lock provenance explicitly unknown                                      |
+| G2  | PASS local + native candidate          | Оба включённых POST: malformed JSON 400, stub calls 0; callback mode fixture                                                                    |
+| G3  | PASS local + native candidate          | Empty/whitespace/null/array/scalars 400, unsupported media 415, bounded 64 KiB-chunk stream >25 MiB →413                                        |
+| G4  | PASS local/actual live Trigger fixture | UTF-8/Unicode/whitespace/CRLF Buffer, NFC/byte mutation и missing/wrong headers; actual Chatwoot 4.18.0 scheme/secret equality подтверждены Ops |
+| G5  | PASS stubs + Ops live                  | Secret/confirmation, ACK, filters, dedup, attachments; production deliveries/attachment/replay accepted by Ops                                  |
+| G6  | PASS local + native tested errors      | Captured pino logs и responses без synthetic body/secret/signature markers; internal failure остаётся 500                                       |
+| G7  | PASS                                   | Lock/base digest сохранены, source tag известен; linux/amd64, image/Node/lock/archive известны; native contract/process budget PASS             |
+| G8  | PASS local + hosted GitHub CI          | [candidate-gates.txt](candidate-gates.txt), 82 tests, Docker build; [hosted CI evidence](github-ci.json)                                        |
 
 Без реальных VK/Chatwoot сообщений или внешних отправок. Fixtures находятся в `test/server.test.ts`,
 `test/pipelines.test.ts`, `test/shutdown.test.ts`. Последний запускает отдельный процесс с пустым cwd
@@ -219,10 +219,10 @@ WAF, proxy limits/auth, DNS/firewall и Chatwoot core не менялись.
 
 Build source строго `7ca82d64d706e4a4faa7569389c774a6df2b6af9`; последующие commits меняют только
 release evidence/scripts. Образ повторно не пересобирался. Итоговые identity/GO — `candidate.json`.
-G8 подтверждён локальными командами существующего workflow, включая Docker build; hosted GitHub
-Actions **NOT RUN**, push/PR/merge не выполнялись. Не выдавать локальный PASS за remote CI run.
-Ops принимает candidate и выполняет production acceptance по ТЗ 2; GO приложения не означает
-автоматический production deploy или end-to-end PASS.
+G8 подтверждён локальными gates и hosted GitHub Actions: build и docker jobs завершились success,
+[run evidence](github-ci.json). Ветка, baseline и релизные теги опубликованы;
+[PR #4](https://github.com/pavlikru/chatwoot-vk-gateway/pull/4) проходит проверки перед merge.
+Ops выполнил production acceptance по ТЗ 2; результаты приведены в production-acceptance.json.
 
 ## Existing operational finding
 
