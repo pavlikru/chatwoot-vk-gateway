@@ -1,5 +1,5 @@
 {
-  "status": "APP RELEASE GO: verified candidate for Ops rollout under TЗ 2; production acceptance remains Ops",
+  "status": "DEPLOYED: Ops production acceptance PASS; publishing GitHub CI verification",
   "sourceCommit": "7ca82d64d706e4a4faa7569389c774a6df2b6af9",
   "sourceTag": "gateway-json-candidate-20261022",
   "tag": "chatwoot-vk-gateway:json-20261022",
@@ -101,7 +101,7 @@
     "OOMKilled": false,
     "shutdown": "SIGTERM exit 0"
   },
-  "verificationScope": "Synthetic/stub contract, startup and 5s idle sample; production deliveries/observation belong to Ops. No stress/large attachment traffic claim.",
+  "verificationScope": "Local/native synthetic tests and production O1-O8 accepted by Ops. GitHub CI verification is being completed.",
   "acceptance": {
     "G1": "PASS",
     "G2": "PASS",
@@ -111,5 +111,6 @@
     "G6": "PASS",
     "G7": "PASS",
     "G8": "PASS local format/lint/typecheck/82 tests/build + Docker workflow build; hosted CI not run"
-  }
+  },
+  "productionAcceptance": "production-acceptance.json"
 }

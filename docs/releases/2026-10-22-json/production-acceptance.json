@@ -1,0 +1,36 @@
+{
+  "verifiedUtc": "2026-10-22T16:03:12.728086+00:00",
+  "overall": "PASS",
+  "criteria": {
+    "O1": "PASS",
+    "O2": "PASS",
+    "O3": "PASS",
+    "O4": "PASS",
+    "O5": "PASS",
+    "O6": "PASS",
+    "O7": "PASS",
+    "O8": "PASS"
+  },
+  "binding": {
+    "source_commit": "7ca82d64d706e4a4faa7569389c774a6df2b6af9",
+    "source_tag": "gateway-json-candidate-20261022",
+    "image_tag": "chatwoot-vk-gateway:json-20261022",
+    "native_inspect_id": "sha256:64ff385887ed3ed9f5282da28937a330822eb58d0a11caebcddbf5f9f770ac3d",
+    "config_digest": "sha256:8fbf59f70d3fcec7fdfa51a5cb982cafd616e1b2f77e6346ae083740f1e10f4f",
+    "archive_sha256": "d4cf1a56a726696f958f76d4941273884c04c3421e68da36a5d002b9689bdbad",
+    "node": "v24.22.1"
+  },
+  "scope": "Only gateway image pin and explicitly approved VK_CONFIRMATION changed. Production messaging, attachment, signed replay dedup, ingress controls and observation accepted by Ops.",
+  "observation": {
+    "durationSeconds": 1820.798237,
+    "samples": 32,
+    "allPublicHealth200": true,
+    "restarts": 0,
+    "oomEvents": 0,
+    "neighborsUnchanged": 16,
+    "memoryCurrentMiB": 32.1,
+    "memoryPeakMiB": 53.2
+  },
+  "rolloutHealthInterruptionUpperBoundSeconds": 4.42,
+  "actualProductionRollback": "NOT PERFORMED; recovery inputs and guarded procedure verified"
+}

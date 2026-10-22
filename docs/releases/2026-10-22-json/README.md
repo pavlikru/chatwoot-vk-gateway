@@ -1,6 +1,6 @@
 # VK gateway JSON fix — source bundle, 22 октября 2026
 
-**Статус: APP RELEASE GO — candidate G1–G8 передаётся Ops для rollout по ТЗ 2.**
+**Статус: RELEASED — production принят Ops по O1–O8; GitHub CI запускается перед merge.**
 Первый source snapshot: `099cbd2` / `gateway-json-source-20261022`. Candidate source `7ca82d64d706e4a4faa7569389c774a6df2b6af9`, тег `gateway-json-candidate-20261022`.
 [Image identity, archive SHA и команды](candidate.json); production rollout выполняет Ops по ТЗ 2.
 
@@ -231,3 +231,12 @@ VK_CONFIRMATION не совпадает с кодом VK API. Это сущес�
 не регрессия candidate. Павел разрешил Ops исправить только этот ключ при своём rollout,
 с protected env backup. Шлюз поддерживает confirmation; эта задача не читает/меняет production
 значения и не выполняет реальные sends. Production end-to-end acceptance остаётся у Ops.
+
+## Production acceptance
+
+Ops завершил rollout и независимую приёмку O1–O8: [санитизированный итог](production-acceptance.json).
+Работает тот же candidate/source `7ca82d6`, Node 24.22.1. Подтверждены двусторонние доставки,
+вложение, отсутствие дубля при повторе подписанного события, ingress/auth и actual confirmation.
+За 1820.8 секунды наблюдения: 32 health samples со статусом 200, restart/OOM 0, 16 соседних
+сервисов без изменений; current/peak 32.1/53.2 MiB. Перерыв health при выкладке ограничен 4.420 s.
+Production rollback не выполнялся; recovery image/Compose/env и guarded procedure проверены Ops.
