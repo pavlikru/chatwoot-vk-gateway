@@ -57,11 +57,11 @@ for (const mode of ['complete', 'timeout']) {
       CHATWOOT_ACCOUNT_ID: '1',
       CHATWOOT_INBOX_ID: '7',
       CHATWOOT_TOKEN: 'synthetic-token',
-      SHUTDOWN_TIMEOUT_MS: mode === 'timeout' ? '200' : '5000',
+      SHUTDOWN_TIMEOUT_MS: mode === 'timeout' ? '1000' : '5000',
     },
     stdio: ['ignore', 'pipe', 'pipe'],
   });
-  const exited = once(child, 'exit');
+  const exited = once(child, 'close');
   let logs = '';
   let errors = '';
   child.stdout.on('data', (data) => {

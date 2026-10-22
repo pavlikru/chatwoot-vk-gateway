@@ -27,3 +27,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: docker build -t chatwoot-vk-gateway .
+      - name: Verify graceful shutdown in the built image
+        run: |
+          docker run --rm -i --network none --memory 128m --memory-swap 128m --cpus 0.5 \
+            --entrypoint node chatwoot-vk-gateway --input-type=module \
+            < docs/releases/2026-10-22-shutdown/verify-shutdown.mjs
