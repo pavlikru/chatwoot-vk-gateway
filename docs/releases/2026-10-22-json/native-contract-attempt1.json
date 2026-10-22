@@ -1,0 +1,23 @@
+{
+  "utc": "2026-10-22T15:23:31.689058+00:00",
+  "tag": "chatwoot-vk-gateway:json-20261022",
+  "image_inspect_id": "sha256:64ff385887ed3ed9f5282da28937a330822eb58d0a11caebcddbf5f9f770ac3d",
+  "config_digest": "sha256:8fbf59f70d3fcec7fdfa51a5cb982cafd616e1b2f77e6346ae083740f1e10f4f",
+  "platform": "linux/amd64",
+  "network": "none",
+  "limits": {
+    "memory": 134217728,
+    "memswap": 134217728,
+    "cpus": 0.5
+  },
+  "exit": 1,
+  "stdout": "",
+  "stderr": "node:fs:483\n    return binding.readFileUtf8(path, stringToFlags(options.flag));\n                   ^\n\nError: EACCES: permission denied, open '/tmp/actual-trigger-fixture.json'\n    at readFileSync (node:fs:483:20)\n    at file:///app/[eval1]:14:28\n    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async node:internal/modules/esm/loader:223:26\n    at async ModuleLoader.executeModuleJob (node:internal/modules/esm/loader:220:20)\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {\n  errno: -13,\n  code: 'EACCES',\n  syscall: 'open',\n  path: '/tmp/actual-trigger-fixture.json'\n}\n\nNode.js v24.22.1\n",
+  "state": {
+    "Status": "exited",
+    "ExitCode": 1,
+    "OOMKilled": false,
+    "StartedAt": "2026-10-22T15:23:31.784751654Z",
+    "FinishedAt": "2026-10-22T15:23:32.391632392Z"
+  }
+}

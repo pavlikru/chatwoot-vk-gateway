@@ -1,0 +1,3 @@
+{"stage":"node","memory":{"rss":0,"heapTotal":6868992,"heapUsed":5247032,"external":2137408,"arrayBuffers":137523},"cgroup":"63782912"}
+{"stage":"fastify","memory":{"rss":0,"heapTotal":11063296,"heapUsed":8879064,"external":3016501,"arrayBuffers":179808},"cgroup":"107270144"}
+{"stage":"vk-io","memory":{"rss":0,"heapTotal":15491072,"heapUsed":12812168,"external":4192839,"arrayBuffers":247664},"cgroup":"130686976"}

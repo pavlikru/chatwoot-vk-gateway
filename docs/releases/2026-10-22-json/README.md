@@ -1,8 +1,8 @@
 # VK gateway JSON fix — source bundle, 22 октября 2026
 
-**Статус: candidate verification в работе; production rollout выполняет Ops по ТЗ 2.**
-Первый source snapshot: `099cbd2` / `gateway-json-source-20261022`. Финальный candidate source,
-image identity и ресурсные проверки записываются в `candidate.json` после сборки.
+**Статус: APP RELEASE GO — candidate G1–G8 передаётся Ops для rollout по ТЗ 2.**
+Первый source snapshot: `099cbd2` / `gateway-json-source-20261022`. Candidate source `7ca82d64d706e4a4faa7569389c774a6df2b6af9`, тег `gateway-json-candidate-20261022`.
+[Image identity, archive SHA и команды](candidate.json); production rollout выполняет Ops по ТЗ 2.
 
 ## Сохранённый baseline
 
@@ -87,7 +87,7 @@ Vitest и isolated candidate; production signature/secret в bundle отсутс
 Node 20 EOL, Node 24 поддерживается до 2028-04-30, Node 26 становится LTS 2026-10-28.
 Выбрана Node **24.22.1**, обе Docker stages закреплены на official Alpine 3.24 OCI index digest
 из fingerprints. `docker buildx imagetools inspect node:24.22.1-alpine3.24` подтвердил digest;
-это проверка registry metadata, не запуск candidate. Engines ограничены Node 24, CI использует 24.22.1.
+Runtime candidate подтверждён: Node 24.22.1, npm 11.19.1, linux/x64 (amd64). Engines ограничены Node 24, CI использует 24.22.1.
 Локальные проверки выполнены существующим Node **24.15.0**, npm **11.12.1**, darwin/arm64.
 
 Точные версии всех прямых dependencies — в fingerprints, полное дерево — в lockfile.
@@ -109,20 +109,56 @@ SDK vk-io 4.10.1 оставлен как latest stable; его node-domexception
 
 Build context ограничен allowlist Dockerfile/package manifests/tsconfig/src. `.env`, локальные
 настройки, тесты, docs, .git, node_modules и dist с хоста исключены. Runtime копирует только
-package manifests, production dependencies и compiled dist. Образ/logs сборки ещё не проверены.
+package manifests, production dependencies и compiled dist. [Docker build](docker-build.txt) завершён успешно из clean commit `7ca82d6`, `--platform linux/amd64`.
+[Image provenance](image-provenance.json): проверены root allowlist, отсутствие dev tooling,
+отсутствие gateway env в image config/history, credential-free registry URLs в lockfile.
+[Actual runtime fingerprints](image-metadata.json): все compiled/lock SHA совпадают с локальной
+сборкой. Образ: `sha256:8fbf59f70d3fcec7fdfa51a5cb982cafd616e1b2f77e6346ae083740f1e10f4f`,
+archive 75 392 260 bytes, SHA-256 `d4cf1a56a726696f958f76d4941273884c04c3421e68da36a5d002b9689bdbad`.
+Registry digest отсутствует: передаётся restricted image archive, не registry tag.
+
+### Проверка resource budget
+
+Mac/Docker — ARM64; для linux/amd64 включён существующий QEMU/binfmt image (без новых
+установок/увеличения cap). Node24 startup в нативном окружении не эквивалентен эмуляции.
+Под QEMU `verify-candidate.mjs` и actual entrypoint завершились OOM/137 при 128 MiB/0.5 CPU,
+сеть `none`, swap 0. Workload не увеличивался, лимит не поднимался. Diagnostic imports:
+Node core cgroup current 63 782 912; +Fastify 107 270 144; +vk-io 130 686 976 bytes;
+Node RSS reporting в эмуляции возвращает 0 и не используется как метрика.
+[Измерения](emulated-memory-stages.jsonl) и state в candidate.json. Это не PASS по budget и не
+доказательство такого же расхода на native amd64. Ops запросил provisional archive для отдельного
+native запуска в том же cap, без production env/сети/credentials. Native проверки завершены PASS;
+image/archive не менялись после provisional handoff.
+
+**Native Linux/amd64, тот же archive:** [30 contract cases](native-contract.json) и
+[штатный entrypoint/SIGTERM](native-process.json) PASS, network none, 128 MiB / swap 0 / CPU 0.5.
+Contract current/peak 31 068 160 / 34 852 864 bytes; process current/peak 32 419 840 / 36 331 520
+bytes (peak 34.7 MiB). max/oom/oom_kill = 0. Это короткая synthetic проверка и 5s idle sample,
+не гарантия памяти при реальном потоке/крупных attachments. Production observation выполняет Ops.
+Первый native attempt упал EACCES на root-owned synthetic fixture: исправлен только её mode 0444
+в root0700 task directory; image и gateway secrets не менялись, evidence сохранён.
+Docker29 native inspect ID/local RepoDigest `64ff3858…770ac3d` отличается от config digest
+`8fbf59f7…f1e10f4f`; archive SHA/config/compiled fingerprints совпали. Не смешивать эти identifiers.
+
+Повторяемые self-check scripts: [contract](verify-candidate.mjs), [actual process](verify-process.py),
+[identity/filesystem](image-metadata.mjs). Contract запускается через stdin в `/app` с read-only
+mount synthetic fixture в `/tmp/actual-trigger-fixture.json`; команды в candidate.json.
+Actual process script создаёт только network-none synthetic container, проверяет health,
+confirmation, actual Trigger signature, malformed JSON по HTTP, 5s idle sample и SIGTERM exit 0;
+сохраняет cgroup memory/current/peak/events и удаляет свой container. Это не нагрузочный тест.
 
 ## Проверки G1–G8
 
-| AC  | Результат                                       | Доказательство / следующий шаг                                                                                                 |
-| --- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| G1  | PASS reconstructed baseline                     | 36 compiled files equal, patch/ref/recovery retained; original TS/build-lock provenance explicitly unknown                     |
-| G2  | PASS local                                      | Оба включённых POST: malformed JSON 400, stub calls 0; callback mode fixture                                                   |
-| G3  | PASS local                                      | Empty/whitespace/null/array/scalars 400, unsupported media 415, bounded 64 KiB-chunk stream >25 MiB →413                       |
-| G4  | PASS local; live scheme NOT VERIFIED            | UTF-8/Unicode/whitespace/CRLF Buffer, NFC/byte mutation и missing/wrong headers; сверить actual Chatwoot с Ops                 |
-| G5  | PASS stubs; live delivery NOT VERIFIED          | Secret/confirmation, ACK, фильтры incoming/private/inbox/event, VK message_reply, dedup, photo/doc uploads, inbound file relay |
-| G6  | PASS tested HTTP/handler errors                 | Captured pino logs и responses без synthetic body/secret/signature markers; internal failure остаётся 500                      |
-| G7  | NOT VERIFIED                                    | Lock/base digest сохранены, source tag известен; нет confirmed production platform, candidate ID/runtime/archive               |
-| G8  | Local gates PASS; Docker/remote CI NOT VERIFIED | [checks.txt](checks.txt); Docker build отложен до G1/platform, remote CI не запускалась                                        |
+| AC  | Результат                                    | Доказательство / следующий шаг                                                                                                                  |
+| --- | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| G1  | PASS reconstructed baseline                  | 36 compiled files equal, patch/ref/recovery retained; original TS/build-lock provenance explicitly unknown                                      |
+| G2  | PASS local + native candidate                | Оба включённых POST: malformed JSON 400, stub calls 0; callback mode fixture                                                                    |
+| G3  | PASS local + native candidate                | Empty/whitespace/null/array/scalars 400, unsupported media 415, bounded 64 KiB-chunk stream >25 MiB →413                                        |
+| G4  | PASS local/actual live Trigger fixture       | UTF-8/Unicode/whitespace/CRLF Buffer, NFC/byte mutation и missing/wrong headers; actual Chatwoot 4.18.0 scheme/secret equality подтверждены Ops |
+| G5  | PASS stubs; live delivery NOT VERIFIED       | Secret/confirmation, ACK, фильтры incoming/private/inbox/event, VK message_reply, dedup, photo/doc uploads, inbound file relay                  |
+| G6  | PASS local + native tested errors            | Captured pino logs и responses без synthetic body/secret/signature markers; internal failure остаётся 500                                       |
+| G7  | PASS                                         | Lock/base digest сохранены, source tag известен; linux/amd64, image/Node/lock/archive известны; native contract/process budget PASS             |
+| G8  | Local gates + Docker PASS; hosted CI NOT RUN | [candidate-gates.txt](candidate-gates.txt), 82 tests, Docker build exit 0; push/hosted CI не выполнялись                                        |
 
 Без реальных VK/Chatwoot сообщений или внешних отправок. Fixtures находятся в `test/server.test.ts`,
 `test/pipelines.test.ts`, `test/shutdown.test.ts`. Последний запускает отдельный процесс с пустым cwd
@@ -169,7 +205,7 @@ lock/compiled hashes, npm production tree, secret-free filesystem/history/logs �
 в подтверждённом Ops budget 128 MiB / 0.5 CPU / swap 0.
 Identity передаваемого image: ID + registry digest либо SHA-256 restricted `docker save` archive;
 не требовать побайтового совпадения двух независимых builds. Записать commit/platform/identity/Node
-и пересчитать G1–G8. Текущие local compiled fingerprints не являются fingerprints candidate.
+и пересчитать G1–G8. Actual candidate fingerprints находятся в image-metadata.json; их совпадение с local build проверено.
 
 Production rollout — только Ops по своему runbook: сохранённый immutable old image и точная
 gateway Compose backup, recreate только gateway без зависимостей/volumes/shared services,
@@ -178,3 +214,20 @@ gateway Compose backup, recreate только gateway без зависимос�
 При auth/delivery/OOM/image regression вернуть previous image + gateway Compose config,
 проверить те же workflows; runtime rollback не восстанавливает DB и не удаляет новые сообщения.
 WAF, proxy limits/auth, DNS/firewall и Chatwoot core не менялись.
+
+## Передача и оставшиеся границы
+
+Build source строго `7ca82d64d706e4a4faa7569389c774a6df2b6af9`; последующие commits меняют только
+release evidence/scripts. Образ повторно не пересобирался. Итоговые identity/GO — `candidate.json`.
+G8 подтверждён локальными командами существующего workflow, включая Docker build; hosted GitHub
+Actions **NOT RUN**, push/PR/merge не выполнялись. Не выдавать локальный PASS за remote CI run.
+Ops принимает candidate и выполняет production acceptance по ТЗ 2; GO приложения не означает
+автоматический production deploy или end-to-end PASS.
+
+## Existing operational finding
+
+Ops read-only VK check: active callback URL/secret совпадают, status ok; текущее значение
+VK_CONFIRMATION не совпадает с кодом VK API. Это существующая конфигурационная проблема,
+не регрессия candidate. Павел разрешил Ops исправить только этот ключ при своём rollout,
+с protected env backup. Шлюз поддерживает confirmation; эта задача не читает/меняет production
+значения и не выполняет реальные sends. Production end-to-end acceptance остаётся у Ops.

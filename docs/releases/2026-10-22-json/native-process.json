@@ -1,0 +1,54 @@
+{
+  "image": "chatwoot-vk-gateway:json-20261022",
+  "network": "none",
+  "passed": true,
+  "memory": {
+    "memory.current": "32419840",
+    "memory.peak": "36331520",
+    "memory.max": "134217728",
+    "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+    "memory.swap.max": "0",
+    "cpu.max": "50000 100000"
+  },
+  "state": {
+    "Status": "exited",
+    "Running": false,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 0,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-10-22T15:24:22.50610188Z",
+    "FinishedAt": "2026-10-22T15:24:29.730007031Z"
+  },
+  "checks": [
+    "startup",
+    "health",
+    "VK confirmation",
+    "actual Trigger HMAC",
+    "malformed JSON both POST",
+    "5s idle sample",
+    "SIGTERM exit 0",
+    "no OOM"
+  ],
+  "finalState": {
+    "Status": "exited",
+    "Running": false,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 0,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-10-22T15:24:22.50610188Z",
+    "FinishedAt": "2026-10-22T15:24:29.730007031Z"
+  },
+  "logs": [
+    "{\"level\":30,\"time\":1792682663285,\"pid\":1,\"hostname\":\"3150b71d6ac0\",\"msg\":\"using in-memory dedup store\"}\n",
+    "{\"level\":30,\"time\":1792682663786,\"pid\":1,\"hostname\":\"3150b71d6ac0\",\"port\":3000,\"mode\":\"callback\",\"msg\":\"gateway listening\"}\n",
+    "{\"level\":30,\"time\":1792682669715,\"pid\":1,\"hostname\":\"3150b71d6ac0\",\"signal\":\"SIGTERM\",\"msg\":\"shutting down\"}\n"
+  ]
+}

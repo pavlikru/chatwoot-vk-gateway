@@ -1,0 +1,80 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.06kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.22.1-alpine3.24@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 136B done
+#3 DONE 0.0s
+
+#4 [build 1/7] FROM docker.io/library/node:24.22.1-alpine3.24@sha256:06d7adf3e0ef61a13f1d28682726366f97a15aa1888c934d3ecec86c33918b53
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 995B done
+#5 DONE 0.0s
+
+#6 [build 2/7] WORKDIR /app
+#6 CACHED
+
+#7 [build 3/7] COPY package.json package-lock.json ./
+#7 CACHED
+
+#8 [build 4/7] RUN npm ci
+#8 11.99 npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+#8 19.20 
+#8 19.20 added 222 packages, and audited 223 packages in 18s
+#8 19.20 
+#8 19.20 68 packages are looking for funding
+#8 19.20   run `npm fund` for details
+#8 19.21 
+#8 19.21 found 0 vulnerabilities
+#8 19.22 npm warn install-scripts 1 package has install scripts not yet covered by allowScripts:
+#8 19.22 npm warn install-scripts   esbuild@0.28.2 (postinstall: node install.js)
+#8 19.22 npm warn install-scripts
+#8 19.22 npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+#8 19.23 npm notice
+#8 19.23 npm notice New major version of npm available! 11.19.1 -> 12.2.1
+#8 19.23 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+#8 19.23 npm notice To update run: npm install -g npm@12.2.1
+#8 19.23 npm notice
+#8 DONE 19.4s
+
+#9 [build 5/7] COPY tsconfig.json tsconfig.build.json ./
+#9 DONE 0.0s
+
+#10 [build 6/7] COPY src ./src
+#10 DONE 0.0s
+
+#11 [build 7/7] RUN npm run build && npm prune --omit=dev
+#11 1.516 
+#11 1.516 > chatwoot-vk-gateway@0.1.0 build
+#11 1.516 > tsc -p tsconfig.build.json
+#11 1.516 
+#11 24.60 
+#11 24.60 removed 144 packages, and audited 79 packages in 5s
+#11 24.60 
+#11 24.60 24 packages are looking for funding
+#11 24.60   run `npm fund` for details
+#11 24.61 
+#11 24.61 found 0 vulnerabilities
+#11 DONE 24.7s
+
+#12 [runtime 4/5] COPY --from=build /app/node_modules ./node_modules
+#12 DONE 0.4s
+
+#13 [runtime 5/5] COPY --from=build /app/dist ./dist
+#13 DONE 0.0s
+
+#14 exporting to image
+#14 exporting layers
+#14 exporting layers 0.3s done
+#14 writing image sha256:8fbf59f70d3fcec7fdfa51a5cb982cafd616e1b2f77e6346ae083740f1e10f4f done
+#14 naming to docker.io/library/chatwoot-vk-gateway:json-20261022 done
+#14 DONE 0.3s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/6fmt5fngd41gbvr6bz1pkyrad
