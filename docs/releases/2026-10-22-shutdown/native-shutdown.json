@@ -1,0 +1,43 @@
+{
+  "utc": "2026-10-22T17:34:36.011661+00:00",
+  "identity": {
+    "tag": "chatwoot-vk-gateway:shutdown-20261022",
+    "image_inspect_id": "sha256:08fe712e343abdd41673e36f773f83b043bb876a5454123547e7038b5fb4041f",
+    "config_digest": "sha256:96c2db4b832ce77415f7d329927eace5776298e7ffa8ccb0bb8ced723ec2dee6",
+    "platform": "linux/amd64",
+    "archive_sha256": "8aa56af9ff68d556416f50cbb7fa44369ab357fa1e76c128692eddd32ae55ffb",
+    "source_commit": "2a2aaa571d1ac87ac9db29446545395859648556"
+  },
+  "exit": 0,
+  "proof": {
+    "passed": true,
+    "node": "v24.22.1",
+    "results": [
+      {
+        "mode": "complete",
+        "passed": true,
+        "exitCode": 0
+      },
+      {
+        "mode": "timeout",
+        "passed": true,
+        "exitCode": 1
+      }
+    ],
+    "memory": {
+      "memory.current": "23945216",
+      "memory.peak": "74338304",
+      "memory.max": "134217728",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\nsock_throttled 0",
+      "memory.swap.max": "0",
+      "cpu.max": "50000 100000"
+    }
+  },
+  "state": {
+    "Status": "exited",
+    "ExitCode": 0,
+    "OOMKilled": false,
+    "StartedAt": "2026-10-22T17:34:31.730249305Z",
+    "FinishedAt": "2026-10-22T17:34:35.936697739Z"
+  }
+}

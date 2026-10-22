@@ -1,5 +1,7 @@
 # Graceful shutdown — 22 октября 2026
 
+**RELEASED: production принят независимым Ops verifier по AC1–AC8.**
+
 ## Изменение
 
 Источник — main после PR #4, прежний production candidate `7ca82d6` / config digest `8fbf59f7…`.
@@ -59,7 +61,7 @@ Archive SHA-256 `8aa56af9ff68d556416f50cbb7fa44369ab357fa1e76c128692eddd32ae55ff
 [Полные identity/handoff inputs](candidate.json); [actual compiled/runtime fingerprints](image-metadata.json).
 Сборка из clean source linux/amd64 завершена; actual Node 24.22.1, lock/compiled SHA совпали с local build.
 95 local tests и все обычные gates PASS; [hosted CI](github-ci.json): build/docker success.
-Native 128 MiB/.5CPU shutdown proof и production rollout ожидают Ops; этот candidate не объявлен deployed.
+Native exact-archive проверки и production rollout завершены PASS; итог ниже.
 
 ## Постоянная Docker regression в CI
 
@@ -68,3 +70,25 @@ Docker job запускает `verify-shutdown.mjs` на только что с�
 завершается exit0 только при успехе обоих сценариев. Для ускорения timeout case использует
 SHUTDOWN_TIMEOUT_MS=1000; default приложения остаётся 30000. App/source build inputs candidate
 `2a2aaa5` не меняются этой проверкой.
+
+## Итог production
+
+[Независимая приёмка](production-acceptance.json) завершена PASS. Изменены только gateway image
+и grace 40s, env неизменен/default app deadline 30000. Проверены exact native candidate
+[parser/auth](native-contract.json) и [held-delivery shutdown](native-shutdown.json).
+
+Production controlled restart: actual StopTimeout 40, exit 0, `shutting down` → `draining background
+deliveries` → `shutdown complete`, без timeout/SIGKILL. На production в этот момент pendingTasks=0;
+доказательство ожидания удерживаемой доставки получено в изолированном native test, не на клиентах.
+OUT с документом и реальный VK IN доставлены по одному разу, echo/duplicate при signed replay нет.
+
+Наблюдение 17:43:12.892472–18:13:15.085636 UTC (1802.19s): 31 health200 sample, один стабильный
+процесс, restart/OOM/max/POST5xx=0, current31.3/peak52.6MiB. Env/shared configs и 16 соседей
+неизменны. Недоступность при recreate ограничена 4.429s; probes controlled restart дали200.
+Recovery предыдущего рабочего Node24 JSON image и exact Compose/env сохранён Ops; actual rollback
+и нагрузочный тест не выполнялись. [Main CI](https://github.com/pavlikru/chatwoot-vk-gateway/actions/runs/39822631065)
+прошёл 95 tests, Docker build и regression shutdown в128MiB/.5CPU/network none.
+
+Оставшиеся ограничения относятся к SIGKILL/OOM/host failure/expired deadline; штатное ожидание
+принятых доставок при managed restart реализовано. Эти аварийные случаи требуют durable хранения
+заданий до ACK для восстановления и не входят в выполненную правку.
